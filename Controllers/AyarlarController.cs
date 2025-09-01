@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using dafsem.Context;
 using dafsem.Models;
@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using dafsem.Services.Contracts;
 using Microsoft.Extensions.Localization;
 using dafsem.Resources;
-using Microsoft.AspNetCore.Localization;
 
 namespace dafsem.Controllers
 {
@@ -41,12 +40,11 @@ namespace dafsem.Controllers
             if (!string.IsNullOrEmpty(panelLanguage))
             {
                 // Cookie'yi doğru formatta oluştur (ASP.NET Core localization standardına uygun)
-                var cookieValue = CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(panelLanguage));
+                var cookieValue = $"c={panelLanguage}|uic={panelLanguage}";
 
                 CookieOptions option = new CookieOptions
                 {
-                    Path = "/",
-                    Expires = DateTimeOffset.UtcNow.AddYears(1),
+                    Expires = DateTime.Now.AddYears(1),
                     HttpOnly = true,
                     SameSite = SameSiteMode.Lax
                 };
