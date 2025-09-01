@@ -29,6 +29,11 @@ namespace dafsem.Controllers
         // GET: Ayarlar
         public async Task<IActionResult> Index()
         {
+            // Diagnostics: culture and resource test
+            var uiCulture = System.Globalization.CultureInfo.CurrentUICulture?.Name ?? "(null)";
+            var test = _localizer["SiteName"];
+            Console.WriteLine($"[Localization] CurrentUICulture={uiCulture}, ResourceFound={!test.ResourceNotFound}, Value='{test.Value}'");
+
             var ayarlar = await _serviceManager.AyarlarService.SoftGetAyarlarAsync();
             return View(ayarlar);
         }
