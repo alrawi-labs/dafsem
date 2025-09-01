@@ -1,4 +1,4 @@
-﻿@model dafsem.Models.Ayarlar
+@model dafsem.Models.Ayarlar
 @inject IStringLocalizer<SharedResource> Localizer
 
 @{
@@ -164,34 +164,28 @@
         <form asp-action="ChangePanelLanguage" method="post" class="panel-language-form">
             @Html.AntiForgeryToken()
             @{
-                // Cookie'den dil bilgisini doğru şekilde al
-                var panelLanguageCookie = Context.Request.Cookies["PanelLanguage"];
-                var currentLanguage = "tr-TR"; // Varsayılan dil
-
-                if (!string.IsNullOrEmpty(panelLanguageCookie))
+                // Mevcut UI kültür adını kullan (örn. "tr-TR")
+                var currentLanguage = System.Globalization.CultureInfo.CurrentUICulture.Name;
+                var languages = new[]
                 {
-                    // ASP.NET Core localization cookie formatı: c=tr-TR|uic=tr-TR
-                    if (panelLanguageCookie.Contains("|"))
-                    {
-                        var parts = panelLanguageCookie.Split('|');
-                        var culturePart = parts.FirstOrDefault(p => p.StartsWith("c="));
-                        if (!string.IsNullOrEmpty(culturePart))
-                        {
-                            currentLanguage = culturePart.Substring(2);
-                        }
-                    }
-                    else
-                    {
-                        // Eski format için backward compatibility
-                        currentLanguage = panelLanguageCookie;
-                    }
-                }
+                    new { Value = "tr-TR", Text = Localizer["Turkish"].Value },
+                    new { Value = "en-US", Text = Localizer["English"].Value },
+                    new { Value = "ar-SA", Text = Localizer["Arabic"].Value }
+                };
             }
             <select name="panelLanguage" class="panel-language-select" required>
                 <option value="">@Localizer["SelectLanguage"]</option>
-                <option value="tr-TR" selected="@(currentLanguage == "tr-TR")">@Localizer["Turkish"]</option>
-                <option value="en-US" selected="@(currentLanguage == "en-US")">@Localizer["English"]</option>
-                <option value="ar-SA" selected="@(currentLanguage == "ar-SA")">@Localizer["Arabic"]</option>
+                @foreach (var lang in languages)
+                {
+                    if (string.Equals(currentLanguage, lang.Value, System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        <option value="@lang.Value" selected>@lang.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@lang.Value">@lang.Text</option>
+                    }
+                }
             </select>
             <button type="submit" class="panel-language-btn">
                 <i class="bi bi-check-circle me-2"></i>@Localizer["ChangeLanguage"]
