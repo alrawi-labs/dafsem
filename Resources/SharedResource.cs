@@ -1,4 +1,4 @@
-namespace dafsem.Resources
+namespace dafsem
 {
     public class SharedResource
     {
