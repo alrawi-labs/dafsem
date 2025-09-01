@@ -6,7 +6,7 @@ using dafsem.Services;
 using Microsoft.AspNetCore.Authorization;
 using dafsem.Services.Contracts;
 using Microsoft.Extensions.Localization;
-using dafsem;
+using dafsem.Resources;
 using Microsoft.AspNetCore.Localization;
 
 namespace dafsem.Controllers
@@ -17,9 +17,9 @@ namespace dafsem.Controllers
     {
         private readonly IServiceManager _serviceManager;
         private readonly SayfaService _sayfaService;
-        private readonly IStringLocalizer<dafsem.SharedResource> _localizer;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public AyarlarController(IServiceManager serviceManager, SayfaService sayfaService, IStringLocalizer<dafsem.SharedResource> localizer)
+        public AyarlarController(IServiceManager serviceManager, SayfaService sayfaService, IStringLocalizer<SharedResource> localizer)
         {
             _serviceManager = serviceManager;
             _sayfaService = sayfaService;
