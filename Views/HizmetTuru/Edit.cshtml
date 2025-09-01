@@ -1,0 +1,43 @@
+﻿@model dafsem.Models.HizmetTuru
+
+@{
+    ViewData["Title"] = "Hizmet Türü Güncelle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Hizmet Türü Bilgilerini Güncelle</h3>
+            <a asp-action="Index" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left-circle"></i> Geri Dön
+            </a>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <!-- Tür Adı -->
+                <div class="my-3">
+                    <label asp-for="Tur" class="form-label fw-bold"></label>
+                    <input asp-for="Tur" class="form-control" placeholder="Hizmet Türünü Giriniz" />
+                    <span asp-validation-for="Tur" class="text-danger"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Bilgileri Güncelle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

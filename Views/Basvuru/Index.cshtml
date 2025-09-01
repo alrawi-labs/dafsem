@@ -1,0 +1,51 @@
+﻿@model dafsem.Models.Basvuru
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="d-flex justify-content-between card-header bg-info text-white">
+            <h3 class="mb-0">Başvuru Detayları</h3>
+            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model?.Id">
+                <i class="bi bi-pencil-square"></i> Güncelle
+            </a>
+        </div>
+        <div class="card-body">
+            
+            <div class="table-responsive mt-4">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.UstMetin)</th>
+                            <td>@Html.DisplayFor(model => model.UstMetin)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="width: 30%;">@Html.DisplayNameFor(model => model.AltMetin)</th>
+                            <td>@Html.DisplayFor(model => model.AltMetin)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.Form)</th>
+                            <td>
+                                @if (!string.IsNullOrEmpty(Model?.Form))
+                                {
+                                    <a href="@Html.DisplayFor(model => model.Form)" download class="link link-primary">Formu İndir</a>
+                                }
+                                else
+                                {
+                                    <!-- Dosya yoksa bağlantıyı devre dışı bırak veya alternatif bir mesaj göster -->
+                                    <span class="link link-primary disabled">Form bulunamadı</span>
+                                }
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+

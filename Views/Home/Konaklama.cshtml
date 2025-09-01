@@ -1,0 +1,53 @@
+﻿@using dafsem.Models.ViewModels.UserSite
+@model List<KonaklamaViewModel>
+@{
+    Layout = "UserSite/_Layout";
+}
+<section id="featured-services" class="featured-services">
+    <div class="container" data-aos="fade-up">
+        <div class="row justify-content-center">
+            @foreach (var konaklama in Model)
+            {
+                <div class="col-6 d-flex align-items-stretch my-3 mb-lg-0 justify-content-center konaklamalar">
+                    <div class="icon-box w-100" data-aos="fade-up" data-aos-delay="100">
+                        <h2 class="title fs-3 border-bottom pb-1"><a>@konaklama.KonaklamaEvi</a></h2>
+                        @if (konaklama.Adres != null)
+                        {
+                            <p class="description"><strong>@Html.DisplayNameFor(model => konaklama.Adres)</strong>: @konaklama.Adres</p>
+                        }
+                        @if (konaklama.Tel != null)
+                        {
+                            <p class="description"><strong>@Html.DisplayNameFor(model => konaklama.Tel)</strong>: @konaklama.Tel</p>
+                        }
+                        @if (konaklama.Eposta != null)
+                        {
+                            <p class="description"><strong>@Html.DisplayNameFor(model => konaklama.Eposta)</strong>: @konaklama.Eposta</p>
+                        }
+                        @if (konaklama.WebSitesi != null)
+                        {
+                            <p class="description"><strong>@Html.DisplayNameFor(model => konaklama.WebSitesi)</strong>: @konaklama.WebSitesi</p>
+                        }
+                        @if (konaklama.YildizSayisi != null)
+                        {
+                            <p class="description"><strong>@Html.DisplayNameFor(model => konaklama.YildizSayisi)</strong>: @konaklama.YildizSayisi</p>
+                        }
+                        @if (konaklama.KahvaltiDahilMi != null)
+                        {
+                            <p class="description"><strong>@Html.DisplayNameFor(model => konaklama.KahvaltiDahilMi)</strong>: @konaklama.KahvaltiDahilMi</p>
+                        }
+                        @if (konaklama.Odalar?.Count() != 0)
+                        {
+                            <h2 class="title fs-5 mt-3">
+                                <a>@Html.DisplayNameFor(model => konaklama.Odalar)</a>
+                            </h2>
+                            @foreach (var oda in konaklama.Odalar)
+                            {
+                                <p class="description">@oda</p>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

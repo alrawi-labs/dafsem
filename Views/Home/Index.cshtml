@@ -1,0 +1,67 @@
+﻿@using dafsem.Models.ViewModels.UserSite
+@model AnaSayfaViewModel
+@{
+	Layout = "UserSite/_Layout";
+	var tarihler = ViewBag.tarihler;
+}
+
+<section id="featured-services" class="featured-services">
+	<div class="container" data-aos="fade-up">
+		<div class="row justify-content-center">
+			@foreach (var tarih in tarihler)
+			{
+				<div class="col-md-6 col-lg-4 d-flex align-items-stretch my-3 mb-lg-0 justify-content-center">
+					<div class="icon-box" data-aos="fade-up" data-aos-delay="100">
+						<h2 class="title text-center fs-1"><a>@tarih.GunAy</a></h2>
+						<h2 class="title text-center fs-1"><a>@tarih.Yil</a></h2>
+						<p class="description">@tarih.Aciklama</p>
+					</div>
+				</div>
+			}
+		</div>
+
+		<div class="row">
+			<section id="portfolio-details" class="portfolio-details ">
+				<div class="container aos-init aos-animate" data-aos="fade-up">
+					<div class="row gy-4 justify-content-center">
+						<div class="col-lg-6">
+							<div class="portfolio-details-slider swiper">
+								<div class="swiper-wrapper align-items-center">
+
+									@if (Model?.SliderYollari != null && Model.SliderYollari.Any())
+									{
+										foreach (var sliderYol in Model.SliderYollari)
+										{
+											<div class="swiper-slide">
+												<img src="@sliderYol" alt="">
+											</div>
+										}
+									}
+								</div>
+								<div class="swiper-pagination"></div>
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+			</section>
+
+		</div>
+
+	</div>
+</section><!-- End Featured Services Section -->
+<div class="mt-5 row p-md-5" style="background-color: #C9E3EA;width: 100%;">
+	<div class=" col-md-12 col-lg-6 my-1">
+		<img id="ulusal" src="@Model?.AfisYolu" alt=""
+			 style="width: -webkit-fill-available; max-width: 80%;">
+	</div>
+
+	<div class=" col-md-12 col-lg-6  my-1  bg-white " id="sayfa" style="padding: 9%;font-family:marcellus,marcellus,serif;">
+
+		@Html.Raw(Model?.Mektup)
+
+
+	</div>
+</div>

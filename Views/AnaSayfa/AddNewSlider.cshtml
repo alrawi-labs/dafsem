@@ -1,0 +1,341 @@
+﻿@model dafsem.Models.AnaSayfa
+
+<style>
+    .slider-container {
+        background: #f8f9fa;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+    }
+
+    .slider-header {
+        border-bottom: 2px solid #dee2e6;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+    }
+
+    .slider-card {
+        transition: transform 0.2s ease-in-out;
+        position: relative;
+    }
+
+        .slider-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .slider-image-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .slider-image {
+        height: 250px;
+        width: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .slider-card:hover .slider-image {
+        transform: scale(1.05);
+    }
+
+    .slider-actions {
+        position: absolute;
+        bottom: 1rem;
+        right: 1rem;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .slider-card:hover .slider-actions {
+        opacity: 1;
+    }
+
+    .upload-section {
+        background: white;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin-top: 2rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+    }
+
+    .custom-file-upload {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border: 2px dashed #dee2e6;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .custom-file-upload:hover {
+            border-color: #0d6efd;
+            background: #f8f9fa;
+        }
+
+    .upload-icon {
+        font-size: 1.5rem;
+        color: #6c757d;
+    }
+
+    .loading-spinner {
+        display: none;
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+</style>
+<div class="container py-4">
+    <div class="slider-container">
+        <div class="slider-header">
+            <h4 class="fw-bold mb-0"><i class="bi bi-images me-2"></i>Slider Yönetimi</h4>
+        </div>
+
+        <div class="alert alert-warning" id="SliderYok" style="display: @(Model.Sliderler == null || !Model.Sliderler.Any() ? "block" : "none")" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Henüz hiçbir slider eklenmemiştir.
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" id="SliderlerDivi">
+            @if (Model.Sliderler != null)
+            {
+                @foreach (var slider in Model.Sliderler)
+                {
+                    <div class="col" id="Slider@(slider.Id)">
+                        <div class="slider-card">
+                            <div class="slider-image-container">
+                                <a href="@slider.Yol" target="_blank">
+                                    <img src="@slider.Yol" alt="Slider Fotoğrafı" class="slider-image">
+                                </a>
+                                <div class="slider-actions">
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="SetModalData(@slider.Id, '@slider.Yol.Replace("\\", "/")')">
+                                        <i class="bi bi-trash me-1"></i>Sil
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="upload-section">
+            <h6 class="fw-bold mb-3">Yeni Slider Ekle</h6>
+            <div class="row g-3 align-items-center">
+                <div class="col-md-9">
+                    <label class="custom-file-upload w-100 mb-0">
+                        <input type="file" class="d-none" id="SliderPhoto" accept="image/*">
+                        <i class="bi bi-cloud-upload upload-icon"></i>
+                        <div class="flex-grow-1">
+                            <div class="fw-semibold">Fotoğraf Seç</div>
+                            <small class="text-muted" id="file-name">veya sürükle bırak</small>
+                        </div>
+                    </label>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" onclick="SendNewSlider()" class="btn btn-primary w-100">
+                        <span class="spinner-border spinner-border-sm loading-spinner" role="status"></span>
+                        <i class="bi bi-upload me-1"></i>Yükle
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Slider Silme Onay -->
+@{
+    var modalModel = new ModalViewModel
+            {
+                ModalId = "deleteSliderModal",
+                Title = "Slider Fotoğrafını Sil",
+                Body = @"
+    <img id='sliderImage' src='' alt='Slider Fotoğrafı' class='img-fluid rounded modal-img-preview' />
+    <p class='my-3 text-danger fw-bold text-center'>Bu fotoğrafı silmek istediğinizden emin misiniz?</p>",
+                ConfirmButtonId = "deleteConfirmButton"
+            };
+}
+<partial name="Components/Model/_DeleteConfirmationModal" model="modalModel" />
+
+<!-- Alert Modal'lar -->
+@{
+    var SliderAddSuccessModel = new AlerModal("SliderAddSuccessModel", "Slider Eklendi", "Slider başarıyla eklenmiştir", "success");
+    var SliderAddDangerModel = new AlerModal("SliderAddDangerModel", "Hata Oluştu", "Slider eklenemedi, lütfen tekrar deneyin", "danger");
+    var SliderAddWarningModel = new AlerModal("SliderAddWarningModel", "Fotoğraf Seçilmedi", "Slider için bir fotoğraf seçilmedi, lütfen fotoğraf seçin ve tekrar deneyin", "warning");
+
+    var SliderDeleteSuccessModel = new AlerModal("SliderDeleteSuccessModel", "Slider Silindi", "Slider başarıyla silinmiştir", "success");
+    var SliderDeleteDangerModel = new AlerModal("SliderDeleteDangerModel", "Hata Oluştu", "Slider silinemedi, lütfen tekrar deneyin", "danger");
+}
+
+<partial name="Components/Model/_AlertModal" model="SliderAddSuccessModel" />
+<partial name="Components/Model/_AlertModal" model="SliderAddDangerModel" />
+<partial name="Components/Model/_AlertModal" model="SliderAddWarningModel" />
+<partial name="Components/Model/_AlertModal" model="SliderDeleteSuccessModel" />
+<partial name="Components/Model/_AlertModal" model="SliderDeleteDangerModel" />
+
+
+<script>
+    function SetModalData(sliderId, sliderYol) {
+        $('#deleteSliderModal').modal('show')
+        var sliderImageUrl = sliderYol;
+        document.getElementById("sliderImage").src = sliderImageUrl;
+
+        document.getElementById("deleteConfirmButton").onclick = function () {
+            DeleteSlider(sliderId);
+        };
+    }
+
+
+
+    function DeleteSlider(sliderId) {
+
+        const formData = new FormData();
+        formData.append("id", sliderId);
+
+        const link = "@Url.Action("DeleteSlider", "AnaSayfa")"
+        fetch(link, {
+            method: 'POST',
+            headers: {
+                'RequestVerificationToken': csrfToken,  // CSRF token ekleniyor
+            },
+            body: formData  // Form data gönderiliyor
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('Slider' + sliderId).remove();
+                    var divCount = document.querySelector('#SliderlerDivi').querySelectorAll('div').length;
+                    document.getElementById('SliderYok').style.display = divCount < 1 ? 'block' : 'none';
+                    $('#deleteSliderModal').modal('hide');
+                    $('.modal-backdrop').remove();
+                    $('#SliderDeleteSuccessModel').modal('show');
+                }
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+                $('#SliderDeleteDangerModel').modal('show');
+            });
+    }
+
+
+
+
+    function SendNewSlider() {
+        var sliderPhotoInput = document.getElementById("SliderPhoto").files[0];
+        if (!sliderPhotoInput) {
+            $('#SliderAddWarningModel').modal('show');
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append("SliderPhoto", sliderPhotoInput);
+
+        // CSRF token'ı al
+        const link = "@Url.Action("AddNewSlider", "AnaSayfa")"
+
+        // Fetch ile POST isteği gönder
+        fetch(link, {
+            method: 'POST',
+            headers: {
+                'RequestVerificationToken': csrfToken // CSRF token'ı header olarak gönderiyoruz
+            },
+            body: formData
+        })
+            .then(response => response.json()) // Sunucudan dönen JSON yanıtı
+            .then(data => {
+                if (data.success) {
+                    $('#SliderAddSuccessModel').modal('show');
+                    $('#SliderYok').css('display', 'none');
+
+                    var sliderYolu = data.yol.replace('\\', '/');
+
+                    var newSliderHtml =`
+                            <div class="col" id="Slider${data.id}">
+                            <div class="slider-card">
+                                <div class="slider-image-container">
+                                        <a href="${data.yol}" target="_blank">
+                                            <img src="${data.yol}" alt="Slider Fotoğrafı" class="slider-image">
+                                    </a>
+                                    <div class="slider-actions">
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="SetModalData(${data.id},'${sliderYolu}')">
+                                            <i class="bi bi-trash me-1"></i>Sil
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+
+                    var newSliderHtml1 = `
+                        <div class="col" id="Slider${data.id}">
+                            <div class="shadow-sm">
+                                <a href="${data.yol}" target="_blank">
+                                    <img src="${data.yol}" alt="Slider Fotoğrafı" class="card-img-top img-thumbnail" style="height:200px; object-fit:cover;">
+                                </a>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-danger mt-1" data-toggle="modal" data-target="#deleteSliderModal" data-id="${data.id}" onclick="SetModalData(${data.id},'${sliderYolu}')">
+                                    Sil <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    $('#SliderlerDivi').append(newSliderHtml);
+                    $('#SliderPhoto').val(''); // Fotoğraf yükleme alanını sıfırla
+                } else {
+                    $('#SliderAddDangerModel').modal('show');
+                }
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+                $('#SliderAddDangerModel').modal('show');
+            });
+    }
+
+    document.getElementById('SliderPhoto').addEventListener('change', function (event) {
+        const fileName = event.target.files[0].name;
+        document.getElementById('file-name').textContent = fileName;
+    });
+
+    // Drag & Drop desteği
+    const dropZone = document.querySelector('.custom-file-upload');
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        dropZone.classList.add('border-primary', 'bg-light');
+    }
+
+    function unhighlight(e) {
+        dropZone.classList.remove('border-primary', 'bg-light');
+    }
+
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        document.getElementById('SliderPhoto').files = files;
+        const fileName = files[0].name;
+        document.getElementById('file-name').textContent = fileName;
+    }
+</script>
+

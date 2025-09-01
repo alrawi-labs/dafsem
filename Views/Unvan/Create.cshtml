@@ -1,0 +1,49 @@
+﻿@model dafsem.Models.Unvan
+
+@{
+    ViewData["Title"] = "Yeni Unvan Ekle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Yeni Unvan Ekle</h3>
+            <a onclick="window.history.back()" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left-circle"></i> Geri Dön
+            </a>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <!-- Unvan Adı Alanı -->
+                <div class="my-3">
+                    <label asp-for="UnvanAdi" class="form-label fw-bold"></label>
+                    <input asp-for="UnvanAdi" class="form-control" placeholder="Unvan Adı Giriniz" />
+                    <span asp-validation-for="UnvanAdi" class="text-danger"></span>
+                </div>
+
+                <!-- Sıra Alanı -->
+                <div class="my-3">
+                    <label asp-for="Sira" class="form-label fw-bold"></label>
+                    <select asp-for="Sira" class="form-control" asp-items="ViewBag.SiraList"></select>
+                    <span asp-validation-for="Sira" class="text-danger"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,44 @@
+﻿<style>
+    .display-1 .bi {
+        filter: drop-shadow(2px 2px 4px rgba(220, 53, 69, 0.2));
+    }
+
+    .alert {
+        background-color: rgba(248, 249, 250, 0.9);
+    }
+</style>
+
+<div class="container text-center py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Error Icon -->
+            <div class="display-1 text-danger mb-4">
+                <i class="bi bi-shield-lock-fill"></i>
+            </div>
+
+            <!-- Main Error Message -->
+            <h1 class="display-4 fw-bold text-danger mb-4">
+                Erişim Engellendi
+            </h1>
+
+            <!-- Error Description -->
+            <div class="alert alert-light border shadow-sm p-4 mb-4">
+                <p class="lead mb-0">
+                    Bu sayfaya erişim izniniz yok. Eğer yetkiniz olması gerektiğini düşünüyorsanız yöneticinizle iletişime geçin.
+                </p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-3 justify-content-center">
+                <a asp-action="Index" asp-controller="AnaSayfa" class="btn btn-primary px-4">
+                    <i class="bi bi-house-door me-2"></i>Ana Sayfa
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Code -->
+    <div class="mt-5 text-muted">
+        <small>Hata Kodu: 403</small>
+    </div>
+</div>

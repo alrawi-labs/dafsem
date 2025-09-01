@@ -1,0 +1,90 @@
+﻿@model dafsem.Models.Basvuru
+
+@{
+    ViewData["Title"] = "Başvuru Bilgilerini Güncelle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    string AcceptForm = ViewBag.AcceptForm;
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Başvuru Bilgilerini Güncelle</h3>
+            <a asp-action="Index" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left-circle"></i> Geri Dön
+            </a>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <!-- Üst Metin -->
+                <div class="my-3">
+                    <label asp-for="UstMetin" class="form-label fw-bold"></label>
+                    <input asp-for="UstMetin" class="form-control" placeholder="Üst Metin Giriniz" />
+                    <span asp-validation-for="UstMetin" class="text-danger"></span>
+                </div>
+
+                <!-- Alt Metin -->
+                <div class="mb-3">
+                    <label asp-for="AltMetin" class="form-label fw-bold"></label>
+                    <input asp-for="AltMetin" class="form-control" placeholder="Alt Metin Giriniz" />
+                    <span asp-validation-for="AltMetin" class="text-danger"></span>
+                </div>
+
+                <!-- Başvuru Formu -->
+                <div class="mb-3">
+                    <label asp-for="Form" class="form-label fw-bold"></label>
+                    <input name="BasvuruForm" asp-for="Form" type="file" class="form-control" accept="@AcceptForm" />
+                    <span asp-validation-for="Form" class="text-danger"></span>
+                    @if (!string.IsNullOrEmpty(Model.Form))
+                    {
+                        <span class="text-secondary">Mevcut Formu <a href="@Html.DisplayFor(modelItem => Model.Form)" download>İndir</a>, <a href="#" class="text-danger" onclick="confirmDeleteForm(); return false;">Sil</a></span>
+
+                    }
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Bilgileri Güncelle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+        <script>
+        function confirmDeleteForm() {
+            if (confirm("Formu silmek istediğinize emin misiniz?")) {
+                // AntiForgery token'ı alıyoruz
+
+                fetch('@Url.Action("DeleteForm", "Basvuru")', {
+                    method: 'DELETE',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "RequestVerificationToken": csrfToken // CSRF token'ı ekleyin
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            alert("Form silinirken bir hata oluştu.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Hata:', error);
+                        alert("Form silinirken bir hata oluştu.");
+                    });
+            }
+        }
+        </script>
+
+}

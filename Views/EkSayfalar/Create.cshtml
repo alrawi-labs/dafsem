@@ -1,0 +1,423 @@
+﻿@model dafsem.Models.EkSayfalar
+
+@{
+    ViewData["Title"] = "Ek Sayfalar Oluştur";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    List<BilesenlerDto> bilesenler = ViewBag.Bilesenler;
+}
+
+<div class="container-fluid mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0 fs-4 fw-bold"><i class="bi bi-file-earmark-plus me-2"></i>Ek Sayfa Oluştur</h2>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Create" id="createForm">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <!-- Temel Bilgiler -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="SayfaBasligi" class="form-control" placeholder="Sayfa başlığını giriniz..." />
+                            <label asp-for="SayfaBasligi">Sayfa Başlığı</label>
+                            <span asp-validation-for="SayfaBasligi" class="text-danger small"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Url" class="form-control" placeholder="URL giriniz..." />
+                            <label asp-for="Url">URL</label>
+                            <span asp-validation-for="Url" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <select asp-for="BulunduguSayfaId" class="form-select" asp-items="ViewBag.BulunduguSayfaId">
+                                <option value="">Seçiniz...</option>
+                            </select>
+                            <label asp-for="BulunduguSayfaId">Bulunduğu Sayfa</label>
+                            <span asp-validation-for="BulunduguSayfaId" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bileşenler Bölümü -->
+                <div class="card mb-4 border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title fs-5 fw-bold mb-0">
+                            <i class="bi bi-puzzle me-2"></i>Sayfa Bileşenleri
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Eklenen Bileşenler Listesi -->
+                        <div id="componentsContainer" class="mt-4">
+                            <div class="text-center text-muted p-4 border border-dashed rounded" id="emptyState">
+                                <i class="bi bi-box fs-1 d-block mb-2"></i>
+                                <p class="mb-0">Henüz bileşen eklenmedi. Aşağıdaki butondan bir bileşen ekleyerek başlayın.</p>
+                            </div>
+                        </div>
+
+                        <!-- Bileşen Ekle Butonu -->
+                        <div class="mt-4">
+                            <div class="custom-file-upload w-100 text-center" data-bs-toggle="modal" data-bs-target="#componentModal">
+                                <i class="bi bi-plus-circle me-2"></i>Yeni Bileşen Ekle
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Butonları -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Vazgeç
+                    </a>
+                    <button type="button" class="btn btn-success" onclick="sendForm()">
+                        <i class="bi bi-check-circle me-2"></i>Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bileşen Ekle Modal -->
+<div class="modal fade" id="componentModal" tabindex="-1" aria-labelledby="componentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="componentModalLabel"><i class="bi bi-puzzle me-2"></i>Yeni Bileşen Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Bileşen Tipi Seçimi -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <h6 class="fw-bold mb-3">Bileşen Tipi Seçiniz</h6>
+                        <div class="list-group" id="componentTypeList">
+                            @foreach (var bilesen in bilesenler)
+                            {
+                                <button type="button" class="list-group-item list-group-item-action d-flex align-items-center"
+                                        onclick="ComponentManager.selectComponentType(@bilesen.Id)">
+                                    <i class="bi bi-puzzle-fill me-2"></i> @bilesen.Baslik
+                                </button>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <h6 class="fw-bold mb-3">Bileşen İçeriği</h6>
+                        <div id="componentContentContainer" class="p-3 border rounded">
+                            <div class="text-center text-muted py-5">
+                                <i class="bi bi-arrow-left-circle fs-1 d-block mb-2"></i>
+                                <p>Lütfen sol taraftan bir bileşen tipi seçiniz.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-2"></i>İptal
+                </button>
+                <button type="button" class="btn btn-primary" id="addComponentBtn">
+                    <i class="bi bi-plus-circle me-2"></i>Bileşeni Ekle
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section HeadLinks {
+    <style>
+        .component-card {
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+            .component-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+
+            .component-card .component-actions {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                opacity: 0;
+                transition: opacity 0.2s ease;
+            }
+
+            .component-card:hover .component-actions {
+                opacity: 1;
+            }
+
+        .custom-file-upload {
+            border: 2px dashed #dee2e6;
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+            .custom-file-upload:hover {
+                border-color: #0d6efd;
+                background: #f8f9fa;
+            }
+
+        .border-dashed {
+            border-style: dashed !important;
+        }
+
+        .form-floating > label {
+            z-index: 0;
+        }
+    </style>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        var components = []; // Tüm bileşenleri tek bir dizi içinde nesne olarak sakla
+
+        // Bileşen Yönetimi Modülü
+        const ComponentManager = (function () {
+            // Değişkenler
+            const bilesenler = @Html.Raw(Json.Serialize(ViewBag.Bilesenler));
+            let componentIndex = 0;
+            let selectedComponentId = null;
+
+            // DOM Elementleri
+            const $componentsContainer = $('#componentsContainer');
+            const $emptyState = $('#emptyState');
+            const $componentModal = $('#componentModal');
+            const $contentContainer = $('#componentContentContainer');
+
+            // Yardımcı Fonksiyonlar
+            function getBilesenById(id) {
+                return bilesenler.find(b => b.id === id);
+            }
+
+            function createRemoveButton() {
+                return $('<button>', {
+                    type: 'button',
+                    class: 'btn btn-sm btn-outline-danger deleteBilesen',
+                    html: '<i class="bi bi-trash"></i>'
+                });
+            }
+
+            // Bileşen Seçme
+            function selectComponentType(id) {
+                selectedComponentId = id;
+                const bilesen = getBilesenById(id);
+
+                // Aktif sınıfı güncelle
+                $('#componentTypeList .list-group-item').removeClass('active');
+                $(`#componentTypeList button[onclick*="${id}"]`).addClass('active');
+
+                // İçerik konteynırını güncelle
+                $contentContainer.html(bilesen.icerik);
+
+                // Parametreleri ekle
+                const parametreler = bilesen.parametreler;
+                const tipleri = bilesen.parametrelerTipleri;
+
+                for (let i in parametreler) {
+                    addParameterInput('Bilesen' + parametreler[i], parametreler[i], tipleri[i], id);
+                }
+            }
+
+            function addParameterInput(parentId, targetId, targetType, id) {
+                const $parent = $(`#${parentId}`);
+                const $input = $(`<${targetType}>`, {
+                    id: targetId,
+                    'data-id': id,
+                    class: 'form-control'
+                });
+
+                $parent.append($input);
+            }
+
+            var inputValues = [];
+            var inputIds = [];
+            var dataIds = [];
+            var index = 0;
+
+
+            function addComponentFromModal() {
+                if (!selectedComponentId) {
+                    alert('Lütfen bir bileşen tipi seçiniz.');
+                    return;
+                }
+
+                const bilesen = getBilesenById(selectedComponentId);
+                const $inputs = $contentContainer.find('input, textarea, select');
+
+                // Bileşenin verilerini tek bir nesne içinde sakla
+                var componentData = {
+                    values: [],
+                    ids: [],
+                    dataIds: [],
+                    index: index++
+                };
+
+                $inputs.each(function () {
+                    componentData.values.push($(this).val());
+                    componentData.ids.push($(this).attr('id'));
+                    componentData.dataIds.push($(this).data('id'));
+
+                    const $label = $(`#Bilesen${$(this).attr('id')}`);
+                    var tmp = $(this).val();
+
+                    // \n karakterlerini <br> ile değiştiriyoruz
+                    var formattedText = tmp.replace(/\n/g, "<br>");
+
+                    // HTML olarak label'ı güncelliyoruz
+                    $label.html(formattedText);
+                    $label.removeAttr('id');
+                });
+
+                components.push(componentData); // Tek bir nesne olarak listeye ekle
+
+                // Yeni bileşen kartı oluştur
+                const $componentCard = $('<div>', {
+                    class: 'component-card',
+                    'data-id': componentData.index,
+                    html: $contentContainer.html()
+                });
+
+                // Silme butonu ekle
+                const $actionDiv = $('<div>', {
+                    class: 'component-actions'
+                }).append(createRemoveButton());
+
+                $componentCard.append($actionDiv);
+                $componentsContainer.append($componentCard);
+
+                // Boş durum mesajını gizle
+                $emptyState.hide();
+
+                // Modalı kapat ve formu temizle
+                $componentModal.modal('hide');
+                $contentContainer.find('input, textarea, select').val('');
+                $('#componentTypeList .list-group-item').removeClass('active');
+                $contentContainer.empty();
+
+                selectedComponentId = null;
+
+                // Debug
+                console.log('Eklenen Bileşenler:', components);
+            }
+
+
+
+            // Bileşen Silme
+            function initDeleteListener() {
+                $(document).on('click', '.deleteBilesen', function () {
+                    var tmp = $(this).closest('.component-card');
+                    var indexTmp = tmp.data('id');
+
+                    console.log("Silinecek index:", indexTmp);
+
+                    // Diziden ilgili bileşeni kaldır
+                    components = components.filter(c => c.index !== indexTmp);
+
+                    // HTML bileşenini kaldır
+                    tmp.remove();
+
+                    // Eğer hiç bileşen kalmadıysa boş durum mesajını göster
+                    if ($('.component-card').length === 0) {
+                        $('#emptyState').show();
+                    }
+
+                    console.log("Güncellenmiş Bileşenler:", components);
+                });
+            }
+
+
+
+
+
+
+            // URL Oluşturma
+            function initUrlGenerator() {
+                $('#SayfaBasligi').on('input', function () {
+                    const title = $(this).val();
+                    const slug = title.toLowerCase()
+                        .replace(/ğ/g, 'g').replace(/ü/g, 'u')
+                        .replace(/ş/g, 's').replace(/ı/g, 'i')
+                        .replace(/ö/g, 'o').replace(/ç/g, 'c')
+                        .replace(/[^\w-]+/g, '-')
+                        .replace(/--+/g, '-')
+                        .replace(/^-+|-+$/g, '');
+
+                    $('#Url').val(slug);
+                });
+            }
+
+            // Başlangıç
+            function init() {
+                // Olay dinleyicilerini ekle
+                $('#addComponentBtn').on('click', addComponentFromModal);
+                initDeleteListener();
+                initUrlGenerator();
+            }
+
+            // Public API
+            return {
+                init: init,
+                selectComponentType: selectComponentType
+            };
+        })();
+
+        // Sayfa yüklendiğinde başlat
+        $(document).ready(function () {
+            ComponentManager.init();
+        });
+
+
+        function sendForm() {
+            var SayfaBasligi = document.getElementById('SayfaBasligi').value;
+            var BulunduguSayfaId = document.getElementById('BulunduguSayfaId').value;
+            var Url = document.getElementById('Url').value;
+            var ekler = components; // Güncellenmiş bileşenleri alıyoruz
+
+            const formData = {
+                SayfaBasligi: SayfaBasligi,
+                BulunduguSayfaId: BulunduguSayfaId ? parseInt(BulunduguSayfaId) : null, // ❗️ Boş string gelirse null yap
+                Url: Url,
+                Ekler: ekler
+            };
+
+            console.log("Gönderilen JSON:", JSON.stringify(formData)); // Debug için kontrol et
+
+            var link = '@Url.Action("Create", "EkSayfalar")';
+
+            // Fetch API ile POST isteği gönder
+            fetch(link, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': csrfToken,  // CSRF token ekleniyor
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(async response => {
+                    const data = await response.json();
+                    if (response.ok) {
+                        window.location.href = '@Url.Action("Index", "EkSayfalar")';
+                    } else {
+                        alert(data.message); // API'den dönen hata mesajı
+                    }
+                })
+                .catch(error => {
+                    console.error('Hata:', error);
+                    alert('Beklenmeyen bir hata oluştu.');
+                });
+        }
+    </script>
+}

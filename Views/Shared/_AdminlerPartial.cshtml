@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService Authorize
+@{
+    AuthorizationResult result = await Authorize.AuthorizeAsync(User, "RootRole");
+}
+
+@if (result.Succeeded)
+{
+    <a class="nav-link collapsed" data-bs-target="#adminler-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-shield-lock-fill"></i><span>Hesaplar</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="adminler-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+        <li>
+            <a asp-action="Index" asp-controller="Adminler" class="nav-link collapsed">
+                <i class="bi bi-shield-fill-check"></i>
+                <span>Adminler</span>
+            </a>
+        </li>
+        <li>
+            <a asp-action="OnayBekleyenHesaplar" asp-controller="Adminler" class="nav-link collapsed">
+                <i class="bi bi-hourglass-top"></i>
+                <span>Onay Bekleyen Hesaplar</span>
+            </a>
+        </li>
+        <li>
+            <a asp-action="EngellenenHesaplar" asp-controller="Adminler" class="nav-link collapsed">
+                <i class="bi bi-person-fill-x"></i>
+                <span>Engellenen Hesaplar</span>
+            </a>
+        </li>
+    </ul>
+
+}
+else
+{
+    <a asp-action="Index" asp-controller="Adminler" class="nav-link collapsed">
+        <i class="bi bi-shield-fill-check"></i>
+        <span>Adminler</span>
+    </a>
+
+}

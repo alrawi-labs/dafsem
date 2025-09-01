@@ -1,0 +1,100 @@
+﻿@model dafsem.Models.KurulUyeleri
+
+@{
+    ViewData["Title"] = "Kurul Üyesi Güncelle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var unvanlar = ViewBag.Unvanlar.Result as SelectList;
+    var kategoriler = ViewBag.Kategoriler as SelectList;
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Kurul Üyesi Bilgilerini Güncelle</h3>
+            <a asp-action="Index" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left-circle"></i> Geri Dön
+            </a>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <!-- Kategori -->
+                <div class="my-3">
+                    <label asp-for="Unvan" class="form-label fw-bold"></label>
+                    <div class="input-group">
+                        <select name="Unvan" asp-for="Unvan" class="form-select">
+                            <option value="">Unvan Seçiniz...</option>
+                            @foreach (var item in unvanlar)
+                            {
+                                <option value="@item.Value" selected="@(Model.Unvan?.Id.ToString() == item.Value ? "selected" : null)">
+                                    @item.Text
+                                </option>
+                            }
+                        </select>
+
+                        <a class="btn btn-secondary" asp-action="Create" asp-controller="Unvan">
+                            <i class="bi bi-plus-circle"></i> Ünvan Ekle
+                        </a>
+                    </div>
+                    <span asp-validation-for="Unvan" class="text-danger"></span>
+                </div>
+
+                <!-- Adı -->
+                <div class="mb-3">
+                    <label asp-for="Adi" class="form-label fw-bold"></label>
+                    <input asp-for="Adi" class="form-control" placeholder="Ad Giriniz" />
+                    <span asp-validation-for="Adi" class="text-danger"></span>
+                </div>
+
+                <!-- Soyadı -->
+                <div class="mb-3">
+                    <label asp-for="Soyadi" class="form-label fw-bold"></label>
+                    <input asp-for="Soyadi" class="form-control" placeholder="Soyad Giriniz" />
+                    <span asp-validation-for="Soyadi" class="text-danger"></span>
+                </div>
+
+                <!-- Kurum -->
+                <div class="mb-3">
+                    <label asp-for="Kurum" class="form-label fw-bold"></label>
+                    <input asp-for="Kurum" class="form-control" placeholder="Kurum Adını Giriniz" />
+                    <span asp-validation-for="Kurum" class="text-danger"></span>
+                </div>
+
+                <!-- Kategori -->
+                <div class="mb-3">
+                    <label asp-for="KategoriId" class="form-label fw-bold"></label>
+                    <div class="input-group">
+                        <select name="Kategori" asp-for="KategoriId" class="form-select">
+                            @foreach (var item in kategoriler)
+                            {
+                                if (Model.KategoriId.Id.ToString() == item.Value)
+                                {
+                                    <option selected value="@item.Value">@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                        <a class="btn btn-secondary" asp-action="Create" asp-controller="KurulKategorileri">
+                            <i class="bi bi-plus-circle"></i> Kategori Ekle
+                        </a>
+                    </div>
+                    <span asp-validation-for="KategoriId" class="text-danger"></span>
+                </div>
+
+
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Bilgileri Güncelle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

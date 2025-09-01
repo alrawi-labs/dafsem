@@ -1,0 +1,52 @@
+﻿@model HeroViewModel
+@{
+    string arkaplanyolu = "";
+    if (Model != null)
+    {
+        if (Model.SiteArkaplaniYol != null)
+        {
+            arkaplanyolu = Model?.SiteArkaplaniYol?.Replace('\\', '/');
+        }
+    }
+    var solLogoYok = string.IsNullOrEmpty(Model?.SolLogoYol);
+    var sagLogoYok = string.IsNullOrEmpty(Model?.SagLogoYol);
+    var kurumAdiYok = string.IsNullOrEmpty(Model?.KurumAdi);
+
+    var className = "";
+    if (solLogoYok && kurumAdiYok)
+    {
+        className = "sag-logo-center";
+    }
+    else if (sagLogoYok && kurumAdiYok)
+    {
+        className = "sol-logo-center";
+    }
+}
+<section id="hero" class="d-flex align-items-center text-center" style="background: url('@arkaplanyolu') top left;background-size: cover;">
+    <div class="container" data-aos="zoom-out" data-aos-delay="100">
+        <div class="logos my-5 @className">
+            @if (!solLogoYok)
+            {
+                <img src="@Model.SolLogoYol" alt="Sol Logo" style="width: 170px;">
+            }
+
+            @if (!kurumAdiYok)
+            {
+                <h1>@Model.KurumAdi.ToUpper(new System.Globalization.CultureInfo($"{Model?.DilKodu?.ToLower()}-{Model?.DilKodu?.ToUpper()}"))</h1>
+            }
+
+            @if (!sagLogoYok)
+            {
+                <img src="@Model.SagLogoYol" alt="Sağ Logo" style="width: 170px;">
+            }
+        </div>
+
+        <h1>
+            @Html.Raw(Model?.SiteAltBaslik)
+        </h1>
+
+        <h1 class="text-white p-3 rounded w-auto mt-5" style="background: #000000c4;"> 
+            @ViewData["title"]?.ToString()?.ToUpper(new System.Globalization.CultureInfo($"{Model?.DilKodu?.ToLower()}-{Model?.DilKodu?.ToUpper()}"))
+        </h1>
+    </div>
+</section>

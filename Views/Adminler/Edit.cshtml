@@ -1,0 +1,113 @@
+﻿@using dafsem.Models.ViewModels.Login;
+@model RootEditViewModel;
+
+<style>
+    .form-floating > label {
+        padding-left: 1.25rem;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    }
+
+    .card {
+        border-radius: 1rem;
+    }
+
+    .card-header {
+        border-radius: 1rem 1rem 0 0 !important;
+    }
+
+    .btn-lg {
+        border-radius: 0.5rem;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-8">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-primary text-white p-4">
+                    <h4 class="mb-2 fw-bold">
+                        <i class="bi bi-pencil-square me-2"></i>Kullanıcı Güncelle
+                    </h4>
+                    <p class="mb-0 small opacity-75">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Güncellenen bilgiler anında geçerli olacaktır.
+                    </p>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small"></div>
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Name" class="form-control" placeholder="Ad Soyad" />
+                            <label asp-for="Name">
+                                <i class="bi bi-person me-1"></i>Ad Soyad
+                            </label>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" type="email" class="form-control" placeholder="Email" />
+                            <label asp-for="Email">
+                                <i class="bi bi-envelope me-1"></i>Email
+                            </label>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <select asp-for="Roles" class="form-control">
+                                <option value="">Seçiniz</option>
+                                @foreach (var role in ViewData["Roles"] as List<SelectListItem>)
+                                {
+                                    <option value="@role.Value" selected="@(role.Value == Model.Roles ? "selected" : null)">
+                                        @role.Text
+                                    </option>
+                                }
+                            </select>
+                            <label asp-for="Roles">
+                                <i class="bi bi-award me-1"></i>Yetki Seçiniz
+                            </label>
+                            <span asp-validation-for="Roles" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="NewPassword" type="password" class="form-control" placeholder="Yeni Şifre" />
+                            <label asp-for="NewPassword">
+                                <i class="bi bi-lock me-1"></i>Yeni Şifre
+                            </label>
+                            <span asp-validation-for="NewPassword" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="ConfirmNewPassword" type="password" class="form-control" placeholder="Şifreyi Onayla" />
+                            <label asp-for="ConfirmNewPassword">
+                                <i class="bi bi-lock-fill me-1"></i>Yeni Şifreyi Onayla
+                            </label>
+                            <span asp-validation-for="ConfirmNewPassword" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex gap-2 flex-column flex-md-row">
+                            <a asp-action="Index" class="btn btn-light btn-lg px-4">
+                                <i class="bi bi-arrow-left me-2"></i>Geri
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
+                                <i class="bi bi-save me-2"></i>Güncelle
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="text-center mt-4 text-muted small">
+                <i class="bi bi-question-circle me-1"></i>
+                Sorun mu yaşıyorsunuz? <a href="#" class="text-decoration-none">Yardım alın</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

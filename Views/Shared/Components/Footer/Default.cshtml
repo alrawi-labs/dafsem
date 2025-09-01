@@ -1,0 +1,13 @@
+﻿@using dafsem.Models.ViewModels.UserSite
+@model FooterViewModel
+
+<footer id="footer">
+    <div class="container py-4">
+        <div class="copyright">
+            &copy; Copyright <strong><span>@Model.SiteAdi?.ToUpper() @DateTime.Now.Year</span></strong>. All Rights Reserved
+        </div>
+        <div class="credits">
+            <a href="mailto:@Model.EPosta">@Model.EPosta</a>
+        </div>
+    </div>
+</footer>

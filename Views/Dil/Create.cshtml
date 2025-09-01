@@ -1,0 +1,57 @@
+﻿@model dafsem.Models.Dil
+
+@{
+    ViewData["Title"] = "Dil Ekle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Dil Ekle</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" id="createForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <!-- Dil Seçimi Dropdown -->
+                        <div class="my-3">
+                            <label asp-for="DilAdi" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <select asp-for="DilKodu" asp-items="ViewBag.SupportedLanguages" class="form-select">
+                                    <option value="">Dil Seçiniz...</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="DilKodu" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle me-2"></i> Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left-circle me-2"></i> Geri Dön
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

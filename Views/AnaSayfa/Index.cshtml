@@ -1,0 +1,307 @@
+﻿@model dafsem.Models.AnaSayfa
+
+@section HeadLinks{
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #475569;
+            --accent-color: #3b82f6;
+            --text-color: #1e293b;
+            --light-bg: #f8fafc;
+            --transition: all 0.3s ease;
+        }
+
+        /* Typography */
+        body {
+            color: var(--text-color);
+            background-color: #f1f5f9;
+        }
+
+        .mektup {
+            max-width: 800px;
+            width: 100%;
+            font-size: 16px;
+            line-height: 1.8;
+            text-align: justify;
+            font-family: 'Marcellus', serif;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .mektup::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            }
+
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: var(--transition);
+            background: white;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            }
+
+        .card-header {
+            background: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e2e8f0;
+            position: relative;
+        }
+
+            .section-title::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 100px;
+                height: 2px;
+                background: var(--primary-color);
+            }
+
+        /* Image Styles */
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            transition: var(--transition);
+        }
+
+            .slider-container:hover {
+                transform: translateY(-5px);
+            }
+
+        .slider-image {
+            height: 250px;
+            object-fit: cover;
+            width: 100%;
+            transition: var(--transition);
+        }
+
+        .slider-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            padding: 1rem;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .slider-container:hover .slider-overlay {
+            opacity: 1;
+        }
+
+        .afise-image {
+            max-width: 800px;
+            width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+            .afise-image:hover {
+                transform: scale(1.02);
+            }
+
+        /* Button Styles */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+            .btn-primary:hover {
+                background: var(--accent-color);
+                transform: translateY(-2px);
+                box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+            }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(71, 85, 105, 0.2);
+        }
+
+            .btn-secondary:hover {
+                background: #64748b;
+                transform: translateY(-2px);
+            }
+
+        /* Alert Styles */
+        .alert {
+            border: none;
+            border-radius: 0.5rem;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .mektup {
+                padding: 1.5rem;
+                font-size: 15px;
+            }
+
+            .slider-image {
+                height: 200px;
+            }
+        }
+    </style>
+}
+
+<div class="container py-5 fade-in">
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0 fw-bold">Ana Sayfa</h3>
+            <div>
+                <a asp-action="Edit" class="btn btn-primary">
+                    <i class="fas fa-edit me-2"></i>Güncelle
+                </a>
+            </div>
+        </div>
+        
+        <div class="card-body">
+            <h4 class="section-title">Mektup</h4>
+            <div class="mektup">
+                @Html.Raw(@Model.Mektup)
+            </div>
+
+            <h4 class="section-title">Afiş</h4>
+            @if (Model.AfiseId != null)
+            {
+                <div class="d-flex justify-content-center" data-aos="fade-up">
+                    <img src="@Model.AfiseId.Yol" alt="Afiş" class="afise-image" />
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <div>Afiş mevcut değil</div>
+                </div>
+            }
+
+            <h4 class="section-title">Slider Fotoğraflar</h4>
+            @if (Model.Sliderler != null && Model.Sliderler.Any())
+            {
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" id="SliderlerDivi">
+                    @foreach (var foto in Model.Sliderler)
+                    {
+                        <div class="col" data-aos="fade-up">
+                            <div class="slider-container shadow-sm">
+                                <a href="@foto.Yol" target="_blank" class="d-block">
+                                    <img src="@foto.Yol" alt="Slider Fotoğrafı" class="slider-image">
+                                    <div class="slider-overlay">
+                                        <i class="fas fa-search-plus text-white"></i>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning d-flex align-items-center" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <div>Henüz hiçbir slider eklenmemiştir.</div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a onclick="window.history.back()" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Geri Dön
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Initialize AOS
+            AOS.init({
+                duration: 800,
+                once: true
+            });
+
+            
+
+            // Image hover effect
+            $('.slider-container').hover(
+                function() {
+                    $(this).find('.slider-overlay').css('opacity', '1');
+                },
+                function() {
+                    $(this).find('.slider-overlay').css('opacity', '0');
+                }
+            );
+
+            // Smooth scroll
+            $('a[href^="#"]').on('click', function(e) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $($(this).attr('href')).offset().top
+                }, 500);
+            });
+        });
+    </script>
+}

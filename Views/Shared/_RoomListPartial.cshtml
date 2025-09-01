@@ -1,0 +1,13 @@
+﻿<ol class="list-group">
+    @foreach (var oda in Model)
+    {
+        int tmp = Model.IndexOf(oda) + 1;
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span class="btn btn-outline-info btn-sm fw-bold">@tmp</span>
+            @oda.OdaTipi - @oda.Ucret @oda.BirimSembol
+            <button onclick="deleteOda(@oda.Id)" class="btn btn-danger btn-sm">
+                <i class="bi bi-trash"></i>
+            </button>
+        </li>
+    }
+</ol>

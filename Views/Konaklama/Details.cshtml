@@ -1,0 +1,72 @@
+﻿@model dafsem.Models.Konaklama
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h3 class="mb-0">Konaklama Detayları</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive mt-4">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.KonaklamaEvi)</th>
+                            <td>@Html.DisplayFor(model => model.KonaklamaEvi)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.Adres)</th>
+                            <td>@Html.DisplayFor(model => model.Adres)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.Tel)</th>
+                            <td>
+                                <a href="tel:@Html.DisplayFor(model => model.Tel)" class="text-decoration-none">
+                                    <i class="bi bi-telephone me-1"></i>@Html.DisplayFor(model => model.Tel)
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.Eposta)</th>
+                            <td>
+                                <a href="mailto:@Html.DisplayFor(model => model.Eposta)" class="text-decoration-none">
+                                    <i class="bi bi-envelope me-1"></i>@Html.DisplayFor(model => model.Eposta)
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.YildizSayisi)</th>
+                            <td class="text-warning">
+                                @for (int i = 0; i < Model.YildizSayisi; i++)
+                                {
+                                    <i class="bi bi-star-fill"></i>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.KahvaltiDahilMi)</th>
+                            <td >
+                                @if (Model.KahvaltiDahilMi == true)
+                                {
+                                    <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-x-circle-fill text-danger fs-5"></i>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model?.Id">
+                    <i class="bi bi-pencil-square"></i> Güncelle
+                </a>
+                <a class="btn btn-secondary" asp-action="Index">
+                    <i class="bi bi-arrow-left-circle"></i> Geri Dön
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+﻿@model List<dafsem.Models.ViewModels.ModalViewModel>
+@{
+    string modalId1 = Model[0].ModalId;
+    string modalIdLabel1 = modalId1 + "Label";
+    string modalBody1 = modalId1 + "-body";
+    string titleColor1 = Model[0].TitleColor ?? "white";
+    string titleBackground1 = Model[0].TitleBackground ?? "primary";
+    string buttonIcon1 = Model[0].ButtonIcon ?? "";
+    string buttonLabel1 = Model[0].ButtonLabel ?? "";
+    string buttonColor1 = Model[0].ButtonColor ?? "primary";
+
+    string modalId2 = Model[1].ModalId;
+    string modalIdLabel2 = modalId2 + "Label";
+    string modalBody2 = modalId2 + "-body";
+    string titleColor2 = Model[1].TitleColor ?? "white";
+    string titleBackground2 = Model[1].TitleBackground ?? "primary";
+    string buttonIcon2 = Model[1].ButtonIcon ?? "";
+    string buttonLabel2 = Model[1].ButtonLabel ?? "";
+    string buttonColor2 = Model[1].ButtonColor ?? "primary";
+}
+<!-- Modal -->
+<div class="modal fade" id="@modalId1" tabindex="-1" role="dialog" aria-labelledby=$"@modalIdLabel1" aria-hidden="true">
+    <button type="button" onclick="ModalHide('@Model[0].ModalId')" class=" btn btn-danger text-white" data-bs-dismiss="modal" aria-label="Kapat">Kapat</button>
+
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="row w-100">
+            <div class="col-lg-6 col-md-12">
+                <div class="modal-content mx-1">
+                    <div class="modal-header bg-@titleBackground1 text-@titleColor1">
+                        <h5 class="modal-title" id="@modalIdLabel1">@Model[0].Title</h5>
+                        <button type="button" onclick="ModalHide('@Model[0].ModalId')" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                    </div>
+                    <div class="modal-body" id="@modalBody1">
+                        @Html.Raw(Model[0].Body)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="ModalHide('@Model[0].ModalId')" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle"></i> Kapat
+                        </button>
+                        @if (buttonLabel1 != "")
+                        {
+                            <button type="button" class="btn btn-@buttonColor1 " id="@Model[0].ConfirmButtonId">
+                                <i class="@buttonIcon1 "></i> @buttonLabel1
+                            </button>
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="modal-content mx-1">
+                    <div class="modal-header bg-@titleBackground2 text-@titleColor2">
+                        <h5 class="modal-title" id="@modalIdLabel2">@Model[1].Title</h5>
+                    </div>
+                    <div class="modal-body" id="@modalBody2">
+                        @Html.Raw(Model[1].Body)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ModalHide(modalId) {
+        $('#' + modalId).removeClass('show');
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+        $('#' + modalId).css("display", "none")
+    }
+</script>

@@ -1,0 +1,9 @@
+﻿<!-- Template Main CSS File -->
+<link href="~/css/site.css" rel="stylesheet">
+
+@model dafsem.Models.ViewModels.ErrorMessageModel
+
+<section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+    <h2>@Model.ErrorMessage</h2>
+    <img src="/not-found.svg" class="img-fluid py-5" alt="Page Not Found">
+</section>

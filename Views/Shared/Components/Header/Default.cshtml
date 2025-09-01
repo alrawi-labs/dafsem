@@ -1,0 +1,90 @@
+﻿@using dafsem.Models.ViewModels.UserSite
+@model HeaderViewModel
+@{
+    string actionName = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+}
+<header id="header" class="d-flex align-items-center">
+    <div class="container d-flex align-items-center justify-content-between">
+
+        <h1 class="logo"><a href="@Url.Action("Index","Home")">@Model.SiteAdi?.ToUpper()</a></h1>
+
+        <nav id="navbar" class="navbar">
+            <ul>
+
+                @foreach (var sayfa in Model.Sayfalar)
+                {
+                    if(sayfa.AltSayfalari?.Count == 0)
+                    {
+                        <li><a class="nav-link scrollto" href="@sayfa.Url/@Model.DilKodu">@sayfa.SayfaBasligi</a></li>
+                    }
+                    else
+                    {
+                        <li class="dropdown">
+                            <a href=""><span>@sayfa.SayfaBasligi</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                @foreach (var alt in sayfa.AltSayfalari)
+                                {
+                                    <li><a href="@alt.Url/@Model.DilKodu">@alt.AltSayfaBaslik</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                }
+
+                @foreach (var sayfa in Model.EkSayfalar)
+                {
+                    @if(sayfa.AltSayfalar?.Count == 0)
+                    {
+
+                        <li><a class="nav-link scrollto" href="/sayfa/@sayfa.Url/@Model.DilKodu">@sayfa.SayfaBasligi</a></li>
+                    }
+                    else
+                    {
+                        <li class="dropdown">
+                            <a href=""><span>@sayfa.SayfaBasligi</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                @foreach (var alt in sayfa.AltSayfalar)
+                                {
+                                    <li><a href="/sayfa/@alt.Url/@Model.DilKodu">@alt.SayfaBasligi</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                }
+
+                <select class="form-control" onchange="changeLanguage(this.value)" style="margin-left: 1rem">
+                    @foreach (var item in Model?.Diller)
+                    {
+                        <option value="@item.Value" selected="@(item.Selected ? "selected" : null)">@item.Text</option>
+                    }
+                </select>
+
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+
+            
+        </nav><!-- .navbar -->
+
+    </div>
+</header>
+
+<script>
+    function changeLanguage(selectedLang) {
+        var currentAction = "@actionName";
+        console.log(currentAction)
+        const url = '@Url.Action("ChangeLanguage", "Home")' +
+            "?selectedLanguage=" + encodeURIComponent(selectedLang) +
+            "&actionName=" + encodeURIComponent(currentAction);
+        console.log(url)
+        fetch(url, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url; // Yönlendirmeyi uygula
+                }
+            })
+            .catch(error => console.error("Dil değişimi hatası:", error));
+    }
+</script>

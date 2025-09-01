@@ -1,0 +1,16 @@
+﻿@{
+    if (User != null)
+    {
+        if (User.Identity != null)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                Layout = "_AdminLayout";
+            }
+            else
+            {
+                Layout = "UserSite/_Layout";
+            }
+        }
+    }
+}

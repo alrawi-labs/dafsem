@@ -1,0 +1,358 @@
+﻿@model dafsem.Models.AnaSayfa
+
+
+@section HeadLinks{
+      <style>
+        :root {
+            --primary: #2563eb;
+            --success: #16a34a;
+            --warning: #ca8a04;
+            --surface: #ffffff;
+            --background: #f8fafc;
+        }
+
+        body {
+            background: var(--background);
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .edit-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), #3b82f6);
+            color: white;
+            border-radius: 1rem 1rem 0 0;
+            padding: 1.5rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+
+        .editor-container {
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .ql-toolbar {
+            border: none !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            background: #f8fafc;
+        }
+
+        .ql-container {
+            border: none !important;
+            font-family: inherit;
+        }
+
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            border: 2px dashed #e2e8f0;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background: #f8fafc;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .preview-image:hover {
+            transform: scale(1.02);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-success {
+            background: var(--success);
+            border: none;
+        }
+
+        .alert {
+            border: none;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        @@media (max-width: 768px) {
+            .edit-container {
+                margin: 1rem auto;
+            }
+        }
+    <!-- Quill CSS -->
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet" >
+    </style>
+}
+
+<div class="edit-container">
+    <div class="card">
+        <div class="card-header text-center">
+            <h2 class="h4 mb-0">Bilgileri Güncelle</h2>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+
+                <div class="mb-4">
+                    <label asp-for="Mektup" class="form-label fw-bold">Mektup</label>
+                    <div class="editor-container">
+                        <div id="editor-container" style="height: 400px;"></div>
+                    </div>
+                    <textarea asp-for="Mektup" id="mektup" style="display:none;">@Html.Raw(Model.Mektup)</textarea>
+                    <span asp-validation-for="Mektup" class="text-danger small mt-1"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Afiş</label>
+                    <div id="AfiseDiv" class="preview-container mb-3">
+                        @if (Model.AfiseId != null)
+                        {
+                            <img src="@Model.AfiseId?.Yol" alt="Afiş" class="preview-image" />
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning">
+                                <i class="bi bi-exclamation-circle me-2"></i>
+                                Henüz Afiş yüklenmemiştir.
+                            </div>
+                        }
+                    </div>
+
+                    <div class="file-upload mb-3">
+                        <input name="Afise" id="fileInput" type="file" accept="image/*" />
+                        <div class="upload-content">
+                            <i class="bi bi-cloud-upload fs-3 mb-2"></i>
+                            <p id="fileNameText" class="mb-0">Dosya seçin veya sürükleyin</p>
+                            <small class="text-muted">Maximum 3MB</small>
+                        </div>
+                    </div>
+                    <small id="fileError" class="text-danger" style="display: none;">
+                        Dosya boyutu 3 MB'ı geçemez.
+                    </small>
+
+                    @if (Model?.AfiseId?.Yol != null)
+                    {
+                        <button id="BtnAfiseSil" type="button"
+                                onclick="DeleteAfise('@Model.AfiseId.Yol.Replace("\\", "/")')"
+                                class="btn btn-danger w-100">
+                            <i class="bi bi-trash me-2"></i>Mevcut Afişi Sil
+                        </button>
+                    }
+                </div>
+
+                <div class="mb-4">
+                    <partial name="AddNewSlider" />
+                </div>
+
+                <div class="d-flex justify-content-between gap-3">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Geri Dön
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check2 me-2"></i>Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@{
+
+    var modalModel = new ModalViewModel
+            {
+                ModalId = "deleteAfiseModal",
+                Title = "Afiş Fotoğrafını Sil",
+                Body = @"
+                <img id='AfiseImage' src='' alt='Slider Fotoğrafı' class='card-img-top img-thumbnail' style='max-width:500px;max-height900px; object-fit:cover;' />
+                <p class='my-3 text-danger fw-bold text-center'>Bu fotoğrafı silmek istediğinizden emin misiniz?</p>",
+
+                ConfirmButtonId = "deleteConfirmButtonAfise"
+            };
+
+
+    var AfiseDeleteWarningModel = new AlerModal(
+        "AfiseDeleteWarningModel",
+        "Fotoğraf Bulunamadı",
+        "Afiş için herhangi bir fotoğraf ayarlanmamış durumda.",
+        "warning"
+    );
+
+    var AfiseDeleteSuccessModel = new AlerModal(
+        "AfiseDeleteSuccessModel",
+        "Afiş Başarıyla Silindi",
+        "Seçili afiş fotoğrafı sistemden başarıyla kaldırılmıştır.",
+        "success"
+    );
+
+    var AfiseDeleteDangerModel = new AlerModal(
+        "AfiseDeleteDangerModel",
+        "Bir Hata Meydana Geldi",
+        "Afiş fotoğrafı silinemedi. Lütfen daha sonra tekrar deneyin veya destek ekibiyle iletişime geçin.",
+        "danger"
+    );
+
+
+}
+
+
+<partial name="Components/Model/_DeleteConfirmationModal" model="modalModel" />
+
+<partial name="Components/Model/_AlertModal" model="AfiseDeleteWarningModel" />
+<partial name="Components/Model/_AlertModal" model="AfiseDeleteSuccessModel" />
+<partial name="Components/Model/_AlertModal" model="AfiseDeleteDangerModel" />
+
+
+<!-- Quill JS -->
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+
+
+@section Scripts{
+<script>
+
+    function DeleteAfise(AfiseId){
+        console.log(AfiseId)
+        if (AfiseId == null || AfiseId == ''){
+            $('#AfiseDeleteWarningModel').modal('show');
+            return
+        }
+        document.getElementById("AfiseImage").src = AfiseId;
+  
+        $('#deleteAfiseModal').modal('show');
+    }
+
+
+
+    document.getElementById("fileInput").addEventListener("change", function () {
+        const maxSize = 3 * 1024 * 1024; // 3 MB
+        const file = this.files[0]; // Seçilen dosya
+
+        if (file) {
+            const fileNameText = document.getElementById("fileNameText");
+
+            if (file.size > maxSize) {
+                document.getElementById("fileError").textContent = "Dosya boyutu 3 MB'ı geçemez.";
+                document.getElementById("fileError").style.display = "block";
+                this.value = ""; // Dosya seçimini temizler
+                fileNameText.textContent = "Dosya seçin veya sürükleyin";
+            } else {
+                document.getElementById("fileError").style.display = "none";
+                fileNameText.textContent = file.name; // Dosya adını göster
+            }
+        }
+        else {
+                fileNameText.textContent = "Dosya seçin veya sürükleyin";
+        }
+    });
+
+    document.getElementById("deleteConfirmButtonAfise").onclick = function () {
+        const link = "@Url.Action("DeleteAfise", "AnaSayfa")"
+
+        fetch(link, {
+        method:'POST',
+        headers:{
+                'RequestVerificationToken': csrfToken
+        },
+    }).then(response => response.json())
+        .then(data => {
+            if(data.success){
+                $('#AfiseDeleteSuccessModel').modal('show');
+                $('#deleteAfiseModal').modal('hide');
+
+                $('#AfiseDiv').html(`
+                                <div class="alert alert-warning" role="alert">
+                                    Henüz Afiş yüklenmemiştir.
+                                </div>
+                             `);
+
+                        $('#BtnAfiseSil').remove()
+            }
+            else {
+                $('#AfiseDeleteDangerModel').modal('show');
+            }
+        }).catch(error => {
+            console.error('Hata', error);
+            $('#AfiseDeleteDangerModel').modal('show');
+        })
+    };
+
+
+    var quill = new Quill('#editor-container', {
+        theme: 'snow',
+        placeholder: 'Mektup içeriği girin',
+        modules: {
+            toolbar: [
+                ['bold', 'italic', 'underline'], // Biçimlendirme araçları
+                [{ 'header': [2, false] }], // Başlık seviyeleri
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }], // Liste
+                ['link'], // Bağlantı
+                [{ 'align': [] }] // Hizalama seçenekleri
+            ]
+        }
+    });
+
+
+    // Quill editöründeki her değişiklikte textarea'yı güncelle
+    quill.on('text-change', function (delta, oldDelta, source) {
+        var quillContent = quill.root.innerHTML;
+        document.getElementById("mektup").value = quillContent;
+    });
+
+    // Sayfa yüklendiğinde, var olan metni Quill editörüne aktar
+    window.onload = function () {
+        var existingContent = document.getElementById("mektup").value;
+        quill.root.innerHTML = existingContent;
+    };
+
+</script>
+}

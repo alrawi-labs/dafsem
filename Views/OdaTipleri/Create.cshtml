@@ -1,0 +1,77 @@
+﻿@model dafsem.Models.OdaTipleri
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Oda Tipi Oluştur</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" id="createForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <!-- Oda Tipi Input -->
+                        <div class="my-3">
+                            <label asp-for="OdaTipi" class="form-label fw-bold"></label>
+                            <input asp-for="OdaTipi" class="form-control" placeholder="Oda tipi giriniz..." />
+                            <span asp-validation-for="OdaTipi" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Ücret ve Birim Input -->
+                        <div class="mb-3">
+                            <label asp-for="Ucret" class="form-label fw-bold">Ücret ve Birim</label>
+                            <div class="input-group">
+                                <input asp-for="Ucret" class="form-control" placeholder="Ücret giriniz..." />
+                                <select name="Birim" asp-items="ViewBag.Birimler" class="form-select">
+                                    <option value="">Birim seçiniz...</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="Ucret" class="text-danger small"></span>
+                            <span asp-validation-for="Birim" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Konaklama Evi Dropdown -->
+                        <div class="mb-3">
+                            <label asp-for="KonaklamaEvi" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <select name="KonaklamaEvi" asp-items="ViewBag.KonaklamaEvleri" class="form-select">
+                                    <option value="">Konaklama Evi Seçiniz...</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="KonaklamaEvi" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle me-2"></i> Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left-circle me-2"></i> Geri Dön
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Optional: Add smooth scrolling for tooltips
+        $(document).ready(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

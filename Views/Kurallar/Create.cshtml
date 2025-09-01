@@ -1,0 +1,63 @@
+﻿@model dafsem.Models.Kurallar
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Kural Oluştur</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" id="createForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <!-- Metin Input -->
+                        <div class="my-3">
+                            <label asp-for="Metin" class="form-label fw-bold"></label>
+                            <input asp-for="Metin" class="form-control" placeholder="Metin giriniz..." />
+                            <span asp-validation-for="Metin" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Türü Dropdown -->
+                        <div class="mb-3">
+                            <label asp-for="KuralTuruId" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <select name="KuralTuruId" asp-items="ViewBag.KuralTuru" class="form-select">
+                                    <option value="">Kural Türü Seçiniz...</option>
+                                </select>
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Yeni Kural Türü Ekle" onclick="location.href='@Url.Action("Create", "KuralTuru")'">
+                                    <i class="bi bi-plus-circle"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="KuralTuruId" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle me-2"></i> Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left-circle me-2"></i> Geri Dön
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Optional: Add smooth scrolling for tooltips
+        $(document).ready(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

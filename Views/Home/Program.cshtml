@@ -1,0 +1,22 @@
+﻿@model string
+
+@{
+    Layout = "UserSite/_Layout";
+}
+
+<div style="width: 100%;" height="1200px">
+    @if(Model == null)
+    {
+        <h1 height="1200px" class="border rounded p-5">
+            PROGRAM DAHA SONRA İLAN EDİLECEKTİR
+        </h1>
+    }
+    else
+    {
+        <iframe src="@Model"
+                height="1200px" width="80%"
+                style="border-radius: 15px; border: 1px solid #000; margin: 3% 10%">
+        </iframe>
+    }
+</div>
+

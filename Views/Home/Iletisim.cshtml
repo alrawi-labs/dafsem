@@ -1,0 +1,62 @@
+﻿@using dafsem.Models.ViewModels.UserSite
+@model IletisimViewModel
+@{
+    Layout = "UserSite/_Layout";
+}
+<section id="contact" class="contact">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+
+
+            <div class="row" data-aos="fade-up" data-aos-delay="100">
+                @if (!string.IsNullOrEmpty(Model?.Adres))
+                {
+                    <div class="col-lg-6">
+                        <div class="info-box mb-4">
+                            <i class="bx bx-map"></i>
+                            <h3>@Html.DisplayNameFor(model => Model.Adres)</h3>
+                            <p>
+                                @Model?.Adres
+                            </p>
+                        </div>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model?.Eposta))
+                {
+                    <div class="col-lg-3 col-md-6">
+                        <div class="info-box  mb-4">
+                            <i class="bx bx-envelope"></i>
+                            <h3>@Html.DisplayNameFor(model => Model.Eposta)</h3>
+                            <p>
+                                @Model?.Eposta
+                            </p>
+                        </div>
+                    </div>
+                }
+                
+                @if (Model?.Telefonlar != null)
+                {
+                    @foreach (var tel in Model?.Telefonlar)
+                    {
+                        <div class="col-lg-3 col-md-6">
+                            <div class="info-box  mb-4">
+                                <i class="bx bx-phone-call"></i>
+                                <h3>@Html.DisplayNameFor(model => Model.Telefonlar)</h3>
+                                <p>@tel.Tel</p>
+                                <p><strong>@Html.DisplayNameFor(model => tel.Dahili)</strong>: @tel?.Dahili</p>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div class="row" data-aos="fade-up" data-aos-delay="100">
+                <div id="map">
+                </div>
+
+            </div>
+
+        </div>
+</section>

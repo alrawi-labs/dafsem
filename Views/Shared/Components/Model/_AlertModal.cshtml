@@ -1,0 +1,29 @@
+﻿@model dafsem.Models.ViewModels.AlerModal
+
+<div id="@Model.ModalId" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content" style="box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;">
+            <div class="modal-header">
+                <div class="icon-box" style="background-color:@Model.Color">
+                    <i class="@Model.Icon"></i>
+                </div>
+                <h4 class="modal-title w-100">@Model.Title</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center" id="@Model.ModalId-Message">@Model.Message</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="AlertHide('@Model.ModalId')" class="btn btn-success btn-block" style="background-color:@Model.Color" data-dismiss="modal">@Model.ButtonLabel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    function AlertHide(modalId) {
+        $("#@Model.ModalId").modal('hide');
+    }
+</script>

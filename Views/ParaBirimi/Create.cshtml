@@ -1,0 +1,67 @@
+﻿@model dafsem.Models.ParaBirimi
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Para Birimi Oluştur</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" id="createForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <!-- Kod Input -->
+                        <div class="my-3">
+                            <label asp-for="Kod" class="form-label fw-bold"></label>
+                            <input asp-for="Kod" class="form-control" placeholder="Para birimi kodu giriniz..." />
+                            <span asp-validation-for="Kod" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Ad Input -->
+                        <div class="mb-3">
+                            <label asp-for="Ad" class="form-label fw-bold"></label>
+                            <input asp-for="Ad" class="form-control" placeholder="Para birimi adı giriniz..." />
+                            <span asp-validation-for="Ad" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Sembol Input -->
+                        <div class="mb-3">
+                            <label asp-for="Sembol" class="form-label fw-bold"></label>
+                            <input asp-for="Sembol" class="form-control" placeholder="Para birimi sembolü giriniz..." />
+                            <span asp-validation-for="Sembol" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle me-2"></i> Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left-circle me-2"></i> Geri Dön
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Optional: Add smooth scrolling for tooltips
+        $(document).ready(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

@@ -1,0 +1,20 @@
+﻿@model SayfaDetayViewModel
+@{
+    Layout = "UserSite/_Layout";
+}
+
+@if (Model == null)
+{
+    <h1 height="1200px" class="border rounded p-5">
+        Sayfa Bulunmamaktadır
+    </h1>
+}
+else
+{
+    <div class="container mt-5">
+        @await Html.PartialAsync("_BilesenlerPartial", Model)
+    </div>
+
+}
+
+

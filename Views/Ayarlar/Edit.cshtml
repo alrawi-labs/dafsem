@@ -1,0 +1,395 @@
+﻿@model dafsem.Models.Ayarlar
+
+@{
+    ViewData["Title"] = "Ayarlar - Güncelle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    string AcceptPhoto = ViewBag.AcceptPhoto;
+    string AcceptForm = ViewBag.AcceptForm;
+}
+
+<style>
+    .container {
+        padding: 30px 20px;
+    }
+
+
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    label {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #333;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        padding: 12px;
+        font-size: 1rem;
+        color: #555;
+    }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        }
+
+
+
+    .alert-secondary {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 8px 15px;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .form-column {
+        flex: 1 1 45%;
+    }
+
+        .form-column img {
+            max-height: 200px;
+        }
+
+    @@media (max-width: 768px) {
+        .form-column {
+            flex: 1 1 100%;
+        }
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0">Ayarlar - Güncelle</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Site Ayarları Güncelleme</div>
+        <div class="card-body">
+            <form id="ayarlarForm" asp-action="Edit" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" id="id" name="Id" value="@Model.Id" />
+                <div class="form-row">
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="SiteAdi">Site Adı</label>
+                            <input type="text" id="SiteAdi" name="SiteAdi" class="form-control" value="@Model.SiteAdi">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="KurumAdi">Kurum Adı</label>
+                            <input type="text" id="KurumAdi" name="KurumAdi" class="form-control" value="@Model.KurumAdi">
+                        </div>
+
+                        <div>
+                            <label for="KurumAdi">Site Alt Başlığı</label>
+
+                            <!-- Quill Editor Default -->
+                            <div id="SiteAltBaslikEditor" name="SiteAltBaslik">
+                                @Html.Raw(@Model.SiteAltBaslik)
+                            </div>
+
+                            <input type="hidden" id="SiteAltBaslikHidden" name="SiteAltBaslik" />
+
+                            <!-- End Quill Editor Default -->
+                        </div>
+
+
+                        <div class="form-group mt-3">
+                            <label for="Program">Program</label>
+                            <input type="file" id="Program" name="Program" class="form-control" accept="@AcceptForm">
+
+                            @if (Model?.Program != null)
+                            {
+                                <div class="mt-3">
+                                    <a href="@Model?.Program" data-id="program" class="btn btn-primary btn-sm" download>
+                                        <i class="bi bi-download me-2"></i> Yüklenen Programı İndir
+                                    </a>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="SetFileData('@Model.Program.Replace("\\","/")')">
+                                        <i class="bi bi-trash"></i> Programı Sil
+                                    </button>
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="SiteLogo">Site Logo</label>
+                            <input type="file" id="SiteLogo" name="SiteLogo" class="form-control" accept="@AcceptPhoto">
+                            @if (Model?.SiteLogo != null)
+                            {
+                                <div>
+                                    <a href="@Model.SiteLogo.Yol" data-id="@Model.SiteLogo.Id" target="_blank">
+                                        <img src="@Model.SiteLogo.Yol" alt="Site Logo" class="img-thumbnail mt-3">
+                                    </a>
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="SetModalData(@Model.SiteLogo.Id,'@nameof(Model.SiteLogoId)','@Model.SiteLogo.Yol.Replace("\\","/")')">
+                                            <i class="bi bi-trash"></i> Site Logosunu Sil
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            <label for="SagLogo">Sağ Logo</label>
+                            <input type="file" id="SagLogo" name="SagLogo" class="form-control" accept="@AcceptPhoto">
+                            @if (Model?.SagLogo != null)
+                            {
+                                <div>
+                                    <a href="@Model.SagLogo.Yol" data-id="@Model.SagLogo.Id" target="_blank">
+                                        <img src="@Model.SagLogo.Yol" alt="Sağ Logo" class="img-thumbnail mt-3">
+                                    </a>
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="SetModalData(@Model.SagLogo.Id,'@nameof(Model.SagLogoId)','@Model.SagLogo.Yol.Replace("\\","/")')">
+                                            <i class="bi bi-trash"></i> Sağ Logoyu Sil
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            <label for="SolLogo">Sol Logo</label>
+                            <input type="file" id="SolLogo" name="SolLogo" class="form-control" accept="@AcceptPhoto">
+                            @if (Model?.SolLogo != null)
+                            {
+                                <div>
+                                    <a href="@Model.SolLogo.Yol" data-id="@Model.SolLogo.Id" target="_blank">
+                                        <img src="@Model.SolLogo.Yol" alt="Sol Logo" class="img-thumbnail mt-3">
+                                    </a>
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="SetModalData(@Model.SolLogo.Id,'@nameof(Model.SolLogoId)','@Model.SolLogo.Yol.Replace("\\","/")')">
+                                            <i class="bi bi-trash"></i> Sol Logoyu Sil
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Filigran">Filigran</label>
+                            <input type="file" id="Filigran" name="Filigran" class="form-control" accept="@AcceptPhoto">
+                            @if (Model?.Filigran != null)
+                            {
+                                <div>
+                                    <a href="@Model.Filigran.Yol" data-id="@Model.Filigran.Id" target="_blank">
+                                        <img src="@Model.Filigran.Yol" alt="Filigran" class="img-thumbnail mt-3">
+                                    </a>
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="SetModalData(@Model.Filigran.Id,'@nameof(Model.FiligranId)','@Model.Filigran.Yol.Replace("\\","/")')">
+                                            <i class="bi bi-trash"></i> Filigran fotoğrafını Sil
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            <label for="SiteArkaplani">Site Arka Planı</label>
+                            <input type="file" id="SiteArkaplani" name="SiteArkaplani" class="form-control" accept="@AcceptPhoto">
+                            @if (Model?.SiteArkaplani != null)
+                            {
+                                <div>
+                                    <a href="@Model.SiteArkaplani.Yol" data-id="@Model.SiteArkaplani.Id" target="_blank">
+                                        <img src="@Model.SiteArkaplani.Yol" alt="Arkaplan" class="img-thumbnail mt-3">
+                                    </a>
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="SetModalData(@Model.SiteArkaplani.Id,'@nameof(Model.SiteArkaplaniId)','@Model.SiteArkaplani.Yol.Replace("\\","/")')">
+                                            <i class="bi bi-trash"></i> Site arka planını Sil
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">Güncelle</button>
+                    <a href="@Url.Action("Index", "Ayarlar")" class="btn btn-secondary ml-3">Vazgeç</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@{
+    var modalModel = new ModalViewModel
+            {
+                ModalId = "deletePhotoModal",
+                Title = "Fotoğraf Sil",
+                Body = @"
+                <img id='RastgeleImage' src='' alt='Fotoğraf' class='card-img-top img-thumbnail' style='max-width:500px;max-height900px; object-fit:cover;' />
+                <p class='my-3 text-danger fw-bold text-center'>Bu fotoğrafı silme işlemi geri alınamaz. Emin misiniz?</p>",
+
+                ConfirmButtonId = "deleteConfirmButton"
+            };
+
+    var modalModelDeleteFile = new ModalViewModel
+            {
+                ModalId = "modalModelDeleteFile",
+                Title = "Dosya Sil",
+                Body = @"
+                <a id='RastgeleDosya' class='btn btn-danger' download>
+                    <i class='bi bi-download me-2'></i> Silenecek Programı İndir
+                </a>
+                <p class='my-3 text-danger fw-bold text-center'>Bu dosyayı silme işlemi geri alınamaz. Emin misiniz?</p>",
+
+                ConfirmButtonId = "deleteDosyaConfirmButton"
+            };
+
+    var PhotoDeleteSuccessModel = new AlerModal(
+        "PhotoDeleteSuccessModel",
+        "Fotoğraf Silindi",
+        "Fotoğraf başarıyla silinmiştir",
+        "success"
+        );
+    var PhotoDeleteDangerModel = new AlerModal(
+           "PhotoDeleteDangerModel",
+           "Hata Oluştu",
+           "Fotoğraf silinemedi, lütfen tekrar deneyin",
+           "danger"
+       );
+
+    var DosyaDeleteSuccessModel = new AlerModal(
+     "DosyaDeleteSuccessModel",
+     "Dosya Silindi",
+     "Dosya başarıyla silinmiştir",
+     "success"
+     );
+    var DosyaDeleteDangerModel = new AlerModal(
+           "DosyaDeleteDangerModel",
+           "Hata Oluştu",
+           "Dosya silinemedi, lütfen tekrar deneyin",
+           "danger"
+       );
+}
+
+<partial name="Components/Model/_DeleteConfirmationModal" model="modalModel" />
+<partial name="Components/Model/_AlertModal" model="PhotoDeleteSuccessModel" />
+<partial name="Components/Model/_AlertModal" model="PhotoDeleteDangerModel" />
+
+<partial name="Components/Model/_DeleteConfirmationModal" model="modalModelDeleteFile" />
+<partial name="Components/Model/_AlertModal" model="DosyaDeleteSuccessModel" />
+<partial name="Components/Model/_AlertModal" model="DosyaDeleteDangerModel" />
+
+<script>
+    function removeElementById(id) {
+        // Doğrudan elementi seç ve kaldır
+        console.log(id)
+        const element = document.querySelector(`[data-id="${id}"]`);
+        console.log("gördün mü")
+
+        if (element) {
+            const parent = element.closest('div'); // İlgili parent div'i seç
+            if (parent) {
+                parent.remove()
+            }
+        }
+    }
+
+    function SetModalData(photoId, domain, photoYol) {
+        $('#deletePhotoModal').modal('show')
+        var photoUrl = photoYol;
+        document.getElementById("RastgeleImage").src = photoUrl;
+
+        document.getElementById("deleteConfirmButton").onclick = function () {
+            DeletePhoto(photoId, domain);
+        };
+    }
+
+    function SetFileData(dosyaYol) {
+        $('#modalModelDeleteFile').modal('show')
+        var dosyaUrl = dosyaYol;
+        document.getElementById("RastgeleDosya").href = dosyaUrl;
+
+        document.getElementById("deleteDosyaConfirmButton").onclick = function () {
+            DeleteFile("program");
+        };
+    }
+
+    function DeleteFile(photoId) {
+
+        const formData = new FormData();
+
+        const link = "@Url.Action("DeleteFile", "Ayarlar")"
+        fetch(link, {
+            method: 'Delete',
+            headers: {
+                'RequestVerificationToken': csrfToken,  // CSRF token ekleniyor
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    $('#modalModelDeleteFile').modal('hide');
+                    $('.modal-backdrop').remove();
+                    $('#DosyaDeleteSuccessModel').modal('show');
+                    removeElementById(photoId);
+                }
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+                $('#DosyaDeleteDangerModel').modal('show');
+            });
+    }
+
+    function DeletePhoto(photoId, domain) {
+
+        const formData = new FormData();
+
+        const link = "@Url.Action("DeletePhoto", "Ayarlar")/" + domain
+        fetch(link, {
+            method: 'Delete',
+            headers: {
+                'RequestVerificationToken': csrfToken,  // CSRF token ekleniyor
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    $('#deletePhotoModal').modal('hide');
+                    $('.modal-backdrop').remove();
+                    $('#PhotoDeleteSuccessModel').modal('show');
+                    console.log("abi ben çalışıyorum")
+                    removeElementById(photoId);
+                }
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+                $('#PhotoDeleteDangerModel').modal('show');
+            });
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Quill editörünü başlat
+        var quill = new Quill('#SiteAltBaslikEditor', {
+            theme: 'snow'
+        });
+
+        // Form gönderilmeden önce gizli input'u güncelle
+        var form = document.querySelector('#ayarlarForm');
+        var hiddenInput = document.querySelector('#SiteAltBaslikHidden');
+
+        form.addEventListener('submit', function () {
+            hiddenInput.value = quill.root.innerHTML; // Quill içeriğini gizli input'a ata
+        });
+    });
+
+
+</script>

@@ -1,0 +1,93 @@
+[
+  {
+    "Id": 1,
+    "Baslik": "Başlık (Siyah)",
+    "Icerik": "<h3 class=\"bg-black text-white p-2 rounded-1 text-center mt-5\" style=\"font-family: marcellus, serif !important;\" id=\"BilesenBaslik\" name=\"BilesenBaslik\"></h3>",
+    "Parametreler": [ "Baslik" ],
+    "ParametrelerTipleri": [ "input" ]
+  },
+  {
+    "Id": 2,
+    "Baslik": "Başlık (Success)",
+    "Icerik": "<h3 class=\"bg-success text-white p-2 rounded-1 text-center mt-5\" style=\"font-family: marcellus, serif !important;\" id=\"BilesenBaslik\" name=\"BilesenBaslik\"></h3>",
+    "Parametreler": [ "Baslik" ],
+    "ParametrelerTipleri": [ "input" ]
+  },
+  {
+    "Id": 3,
+    "Baslik": "Başlık (Danger)",
+    "Icerik": "<h3 class=\"bg-danger text-white p-2 rounded-1 text-center mt-5\" style=\"font-family: marcellus, serif !important;\" id=\"BilesenBaslik\" name=\"BilesenBaslik\"></h3>",
+    "Parametreler": [ "Baslik" ],
+    "ParametrelerTipleri": [ "input" ]
+  },
+  {
+    "Id": 4,
+    "Baslik": "Başlık (Info)",
+    "Icerik": "<h3 class=\"bg-info text-white p-2 rounded-1 text-center mt-5\" style=\"font-family: marcellus, serif !important;\" id=\"BilesenBaslik\" name=\"BilesenBaslik\"></h3>",
+    "Parametreler": [ "Baslik" ],
+    "ParametrelerTipleri": [ "input" ]
+  },
+  {
+    "Id": 5,
+    "Baslik": "Başlık (Warning)",
+    "Icerik": "<h3 class=\"bg-warning text-dark p-2 rounded-1 text-center mt-5\" style=\"font-family: marcellus, serif !important;\" id=\"BilesenBaslik\" name=\"BilesenBaslik\"></h3>",
+    "Parametreler": [ "Baslik" ],
+    "ParametrelerTipleri": [ "input" ]
+  },
+  {
+    "Id": 6,
+    "Baslik": "Paragraf (Success)",
+    "Icerik": "<div class=\"card mb-4 shadow border-success\"><div class=\"card-header bg-success text-white\"><h4 id=\"BilesenBaslik\" name=\"BilesenBaslik\"></h4></div><div class=\"card-body\"><p id=\"BilesenIcerik\" name=\"BilesenIcerik\"></p></div></div>",
+    "Parametreler": [ "Baslik", "Icerik" ],
+    "ParametrelerTipleri": [ "input", "textarea" ]
+  },
+  {
+    "Id": 7,
+    "Baslik": "Paragraf (Danger)",
+    "Icerik": "<div class=\"card mb-4 shadow border-danger\"><div class=\"card-header bg-danger text-white\"><h4 id=\"BilesenBaslik\" name=\"BilesenBaslik\"></h4></div><div class=\"card-body\"><p id=\"BilesenIcerik\" name=\"BilesenIcerik\"></p></div></div>",
+    "Parametreler": [ "Baslik", "Icerik" ],
+    "ParametrelerTipleri": [ "input", "textarea" ]
+  },
+  {
+    "Id": 8,
+    "Baslik": "Paragraf (Info)",
+    "Icerik": "<div class=\"card mb-4 shadow border-info\"><div class=\"card-header bg-info text-white\"><h4 id=\"BilesenBaslik\" name=\"BilesenBaslik\"></h4></div><div class=\"card-body\"><p id=\"BilesenIcerik\" name=\"BilesenIcerik\"></p></div></div>",
+    "Parametreler": [ "Baslik", "Icerik" ],
+    "ParametrelerTipleri": [ "input", "textarea" ]
+  },
+  {
+    "Id": 9,
+    "Baslik": "Paragraf (Warning)",
+    "Icerik": "<div class=\"card mb-4 shadow border-warning\"><div class=\"card-header bg-warning text-dark\"><h4 id=\"BilesenBaslik\" name=\"BilesenBaslik\"></h4></div><div class=\"card-body\"><p id=\"BilesenIcerik\" name=\"BilesenIcerik\"></p></div></div>",
+    "Parametreler": [ "Baslik", "Icerik" ],
+    "ParametrelerTipleri": [ "input", "textarea" ]
+  },
+  {
+    "Id": 10,
+    "Baslik": "Uyarı Kutusu (Success)",
+    "Icerik": "<div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\"><strong id=\"BilesenBaslik\" name=\"BilesenBaslik\"></strong><p id=\"BilesenIcerik\" name=\"BilesenIcerik\"></p><button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button></div>",
+    "Parametreler": [ "Baslik", "Icerik" ],
+    "ParametrelerTipleri": [ "input", "textarea" ]
+  },
+  {
+    "Id": 11,
+    "Baslik": "Uyarı Kutusu (Danger)",
+    "Icerik": "<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\"><strong id=\"BilesenBaslik\" name=\"BilesenBaslik\"></strong><p id=\"BilesenIcerik\" name=\"BilesenIcerik\"></p><button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button></div>",
+    "Parametreler": [ "Baslik", "Icerik" ],
+    "ParametrelerTipleri": [ "input", "textarea" ]
+  },
+  {
+    "Id": 12,
+    "Baslik": "Uyarı Kutusu (Info)",
+    "Icerik": "<div class=\"alert alert-info alert-dismissible fade show\" role=\"alert\"><strong id=\"BilesenBaslik\" name=\"BilesenBaslik\"></strong><p id=\"BilesenIcerik\" name=\"BilesenIcerik\"></p><button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button></div>",
+    "Parametreler": [ "Baslik", "Icerik" ],
+    "ParametrelerTipleri": [ "input", "textarea" ]
+  },
+  {
+    "Id": 13,
+    "Baslik": "Uyarı Kutusu (Warning)",
+    "Icerik": "<div class=\"alert alert-warning alert-dismissible fade show\" role=\"alert\"><strong id=\"BilesenBaslik\" name=\"BilesenBaslik\"></strong><p id=\"BilesenIcerik\" name=\"BilesenIcerik\"></p><button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button></div>",
+    "Parametreler": [ "Baslik", "Icerik" ],
+    "ParametrelerTipleri": [ "input", "textarea" ]
+  }
+]

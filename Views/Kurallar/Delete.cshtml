@@ -1,0 +1,39 @@
+﻿@model dafsem.Models.Kurallar
+
+<div class="container mt-5">
+    <div class="card shadow border-danger">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">Kural Bilgileri</h3>
+        </div>
+        <div class="card-body">
+            <p class="card-text text-muted">Silmek istediğiniz kural bilgileri aşağıda listelenmiştir.</p>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.Metin)</th>
+                            <td>@Html.DisplayFor(model => model.Metin)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.Turu.Tur)</th>
+                            <td>@Html.DisplayFor(model => model.Turu.Tur)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <form asp-action="Delete" class="d-inline">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Sil
+                    </button>
+                </form>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left-circle"></i> Listeye Dön
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

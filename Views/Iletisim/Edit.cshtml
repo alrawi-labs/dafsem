@@ -1,0 +1,431 @@
+﻿@model dafsem.Models.Iletisim
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">İletişim Bilgilerini Güncelle</h3>
+            <a asp-action="Index" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left-circle"></i> Geri Dön
+            </a>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <!-- Üst Metin -->
+                <div class="my-3">
+                    <label asp-for="Eposta" class="form-label fw-bold"></label>
+                    <input asp-for="Eposta" class="form-control" placeholder="E-Posta Giriniz" />
+                    <span asp-validation-for="Eposta" class="text-danger"></span>
+                </div>
+
+                <!-- Alt Metin -->
+                <div class="mb-3">
+                    <label asp-for="Adres" class="form-label fw-bold"></label>
+                    <textarea asp-for="Adres" class="form-control" placeholder="Adresi Giriniz" rows="3"></textarea>
+                    <span asp-validation-for="Adres" class="text-danger"></span>
+                </div>
+
+                <!-- Telefonlar -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Telefonlar</label>
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <!-- Telefon Listesi -->
+                            <ul class="list-group" id="telefonlarListesi">
+                                @foreach (var telefon in Model.Telefonlar)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>Telefon:</strong> @telefon.Tel
+                                            @if (!string.IsNullOrEmpty(telefon.Dahili))
+                                            {
+                                                <span class="text-muted ms-3"><strong>Dahili:</strong> @telefon.Dahili</span>
+                                            }
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn btn-sm btn-warning me-2" onclick="editTelefon(@telefon.Id)">
+                                                <i class="bi bi-pencil-square"></i> Düzenle
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="deleteTelefon(@telefon.Id)">
+                                                <i class="bi bi-trash"></i> Sil
+                                            </button>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                            <!-- Yeni Telefon Ekle -->
+                            <div class="mt-3">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newTelefonModal">
+                                    <i class="bi bi-plus-circle"></i> Yeni Telefon Ekle
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Bilgileri Güncelle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@{
+    var newTelefonModal = new ModalViewModel()
+            {
+                ModalId = "newTelefonModal",
+                Title = "Yeni Bir Telefon Ekle",
+                Body = @"
+            <!-- Telefon -->
+            <div class='mb-3'>
+                <label for='telefon' class='form-label'>Telefon</label>
+                <input type='text' id='telefon' class='form-control' placeholder='Telefon numarası giriniz'>
+            </div>
+
+                   <!-- Dahili Numaraları -->
+                <div class='mb-3'>
+                    <label for='dahiliNumara' class='form-label'>Dahili Numaraları</label>
+                    <div id='dahiliNumaralariContainer'>
+                        <div class='input-group mb-2 dahili-numara-item'>
+                            <input type='text' class='form-control' placeholder='Dahili numara giriniz'>
+                            <button class='btn btn-danger remove-dahili-numara' type='button'>
+                                <i class='bi bi-x-circle'></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button id='addDahiliNumara' type='button' class='btn btn-primary btn-sm mt-2'>
+                        <i class='bi bi-plus-circle'></i> Dahili Numara Ekle
+                    </button>
+                </div>
+
+
+",
+                ConfirmButtonId = "CreateTelefon",
+                ButtonLabel = "Numarayı Kaydet",
+                ButtonIcon = "bi bi-plus-circle"
+            };
+
+    var editTelefonModal = new ModalViewModel()
+            {
+                ModalId = "editTelefonModal",
+                Title = "Telefon Bilgileri Güncelleme",
+
+                Body = @"
+                <form id='editTelefonForm'>
+                    <div class='mb-3'>
+                        <label for='editTelefon' class='form-label'>Telefon</label>
+                        <input type='text' class='form-control' id='editTelefon' required>
+                    </div>
+                    <div class='mb-3'>
+                        <label for='editDahili' class='form-label'>Dahili</label>
+                        <div id='dahililer'>
+                        </div>
+                        <button id='addDahiliNumaraForEdit' type='button' class='btn btn-primary btn-sm mt-2'>
+                        <i class='bi bi-plus-circle'></i> Dahili Numara Ekle
+                    </button>
+                    </div>
+                </form>
+",
+
+                ConfirmButtonId = "saveEditTelefon",
+                ButtonLabel = "Güncellemeyi Kaydet",
+                ButtonIcon = "bi bi-plus-circle"
+            };
+
+}
+
+<partial name="Components/Model/_InfoModal" model="newTelefonModal" />
+<partial name="Components/Model/_InfoModal" model="editTelefonModal" />
+
+
+
+
+@section Scripts {
+
+
+    <script>
+
+
+
+        // Telefon düzenleme fonksiyonu
+        function editTelefon(id) {
+            // Sunucudan mevcut veriyi al
+            const link = "@Url.Action("GetTelefon", "Iletisim")?id=" + id;
+
+            fetch(link, {
+                method: "GET",
+                headers: {
+                    "RequestVerificationToken": csrfToken // CSRF token'ı ekleyin
+                }
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        // Modal içindeki alanlara veriyi doldur
+                        document.getElementById("editTelefon").value = data.telefon.tel;
+                        var dahililer = ""
+                        if (data.telefon.dahili != "") {
+                                data.telefon.dahili.split('/').forEach((dahil) => {
+                                dahililer += `
+                                            <div class="input-group mb-2 dahili-numara-item">
+                                            <input type="text" class="form-control" value='` + dahil + `' placeholder="Dahili numara giriniz">
+                                    <button class="btn btn-danger remove-dahili-numara" type="button">
+                                        <i class="bi bi-x-circle"></i>
+                                    </button>
+                                </div>
+                                `
+                            });
+                            $('#dahililer').html(dahililer)
+                        }
+                        const dahililerContainer = document.getElementById("dahililer");
+
+                        const allInputs = dahililerContainer.querySelectorAll("input");
+                        dahililerContainer.addEventListener("click", (event) => {
+                            if (event.target.closest(".remove-dahili-numara")) {
+                                const itemToRemove = event.target.closest(".dahili-numara-item");
+                                dahililerContainer.removeChild(itemToRemove);
+                            }
+                        });
+
+                        // Kaydet butonuna telefon ID'sini ekle
+                        document.getElementById("saveEditTelefon").setAttribute("data-id", id);
+
+                        // Modalı aç
+                        new bootstrap.Modal(document.getElementById("editTelefonModal")).show();
+                    } else {
+                        alert("Telefon verisi alınamadı!");
+                    }
+                })
+                .catch((error) => console.error("Hata:", error));
+        }
+
+        const addDahiliNumaraForEdit = document.getElementById("addDahiliNumaraForEdit");
+
+        // Dahili Numara Ekle
+        addDahiliNumaraForEdit.addEventListener("click", () => {
+            const container = document.getElementById("dahililer");
+
+            const newInputGroup = document.createElement("div");
+            newInputGroup.className = "input-group mb-2 dahili-numara-item";
+            newInputGroup.innerHTML = `
+                <input type="text" class="form-control" placeholder="Dahili numara giriniz">
+                <button class="btn btn-danger remove-dahili-numara" type="button">
+                    <i class="bi bi-x-circle"></i>
+                </button>
+            `;
+
+            // Yeni oluşturulan "Remove" butonuna olay ekle
+            newInputGroup.querySelector(".remove-dahili-numara").addEventListener("click", () => {
+                container.removeChild(newInputGroup);
+            });
+
+            // Yeni input grubunu ekle
+            container.appendChild(newInputGroup);
+        });
+
+
+        function deleteTelefon(telefonId) {
+            // Kullanıcıya onay sor
+            const userConfirmed = confirm("Bu telefon numarasını silmek istediğinizden emin misiniz?");
+
+            if (userConfirmed) {
+                const link = "@Url.Action("DeleteTelefon", "Iletisim")?id=" + telefonId;
+                // Fetch ile silme isteği gönder
+                fetch(link, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "RequestVerificationToken": csrfToken // CSRF token'ı ekleyin
+                    }
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error("Silme işlemi başarısız oldu.");
+                        }
+                    })
+                    .then((data) => {
+                        // Silme işlemi başarılı olduğunda listeyi güncelle
+                        alert(data.message || "Telefon numarası başarıyla silindi.");
+                        window.location.reload();
+                    })
+                    .catch((error) => {
+                        console.error("Silme işlemi sırasında bir hata oluştu:", error);
+                        alert("Silme işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin.");
+                    });
+            }
+        }
+
+
+        // Düzenlenen veriyi kaydetme
+        document.getElementById("saveEditTelefon").addEventListener("click", () => {
+            const id = document.getElementById("saveEditTelefon").getAttribute("data-id");
+            const tel = document.getElementById("editTelefon").value;
+            const dahililerContainer = document.getElementById("dahililer");
+
+            const dahiliNumaralari = Array.from(
+                dahililerContainer.querySelectorAll("input")
+            )
+                .map((input) => parseInt(input.value, 10))
+                .filter(Number.isInteger);
+
+            const link = "@Url.Action("EditTelefon", "Iletisim")?id=" + id;
+            fetch(link, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "RequestVerificationToken": csrfToken
+                },
+                body: JSON.stringify({ Tel: tel, Dahili: dahiliNumaralari })
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        alert("Telefon başarıyla güncellendi!");
+
+                        // Listeyi güncelle
+                        const telefonItem = document.querySelector(`#telefonlarListesi li[data-id="${id}"]`);
+                        if (telefonItem) {
+                            telefonItem.querySelector("strong").textContent = `Telefon: ${tel}`;
+                            telefonItem.querySelector(".text-muted").textContent = dahili ? `Dahili: ${dahili}` : "";
+                        }
+
+                        // Modalı kapat
+                        $('#editTelefonModal').modal('hide');
+                        window.location.reload();
+                    } else {
+                        alert("Güncelleme başarısız!");
+                    }
+                })
+                .catch((error) => console.error("Hata:", error));
+        });
+
+
+
+
+
+
+
+
+            const dahiliNumaralariContainer = document.getElementById("dahiliNumaralariContainer");
+            const addDahiliNumaraButton = document.getElementById("addDahiliNumara");
+
+            // Dahili Numara Ekle
+            addDahiliNumaraButton.addEventListener("click", () => {
+
+                const allInputs = dahiliNumaralariContainer.querySelectorAll("input");
+                const lastInput = allInputs[allInputs.length - 1];
+
+                // Eğer son input varsa ve değeri boş ise yeni input eklenemez
+                if (lastInput && lastInput.value.trim() === "") {
+                    return;
+                }
+
+                const newInputGroup = document.createElement("div");
+                newInputGroup.className = "input-group mb-2 dahili-numara-item";
+                newInputGroup.innerHTML = `
+                            <input type="text" class="form-control" placeholder="Dahili numara giriniz">
+                            <button class="btn btn-danger remove-dahili-numara" type="button">
+                                <i class="bi bi-x-circle"></i>
+                            </button>
+                        `;
+                dahiliNumaralariContainer.appendChild(newInputGroup);
+            });
+
+            // Dahili Numara Sil
+            dahiliNumaralariContainer.addEventListener("click", (event) => {
+                if (event.target.closest(".remove-dahili-numara")) {
+                    const itemToRemove = event.target.closest(".dahili-numara-item");
+                    dahiliNumaralariContainer.removeChild(itemToRemove);
+                }
+            });
+
+            // Kaydet Butonu (Fetch ile Gönderim)
+            document.getElementById("CreateTelefon").addEventListener("click", () => {
+                const telefon = document.getElementById("telefon").value;
+                const dahiliNumaralari = Array.from(
+                    dahiliNumaralariContainer.querySelectorAll("input")
+                )
+                    .map((input) => parseInt(input.value, 10))
+                    .filter(Number.isInteger);
+
+            fetch('@Url.Action("yeniTelefon", "Iletisim")', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "RequestVerificationToken": csrfToken
+                    },
+                    body: JSON.stringify({
+                        Tel: telefon,
+                        Dahili: dahiliNumaralari
+                    })
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            const telefonlarListesi = document.getElementById("telefonlarListesi");
+
+                            // Listeyi önce temizle
+                            telefonlarListesi.innerHTML = "";
+
+                            // Gelen telefon verilerini listeye ekle
+                            data.telefonlar.forEach((telefon) => {
+                                const li = document.createElement("li");
+                                li.className =
+                                    "list-group-item d-flex justify-content-between align-items-center";
+
+                                li.innerHTML = `
+                                        <div>
+                                            <strong>Telefon:</strong> ${telefon.tel}
+                                            ${telefon.dahili
+                                        ? `<span class="text-muted ms-3"><strong>Dahili:</strong> ${telefon.dahili}</span>`
+                                        : ""
+                                    }
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn btn-sm btn-warning me-2" onclick="editTelefon(${telefon.id})">
+                                                <i class="bi bi-pencil-square"></i> Düzenle
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="deleteTelefon(${telefon.id})">
+                                                <i class="bi bi-trash"></i> Sil
+                                            </button>
+                                        </div>
+                                    `;
+
+                                telefonlarListesi.appendChild(li);
+                            });
+
+                            console.log("Başarılı:", data.message);
+                            $('#newTelefonModal').modal('hide');
+                        } else {
+                            console.error("Hata:", data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Hata:", error);
+                    });
+            });
+
+
+
+
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,22 @@
+﻿@using dafsem.Models.ViewModels.UserSite
+@model List<TarihlerViewModel>
+@{
+    Layout = "UserSite/_Layout";
+}
+<section id="featured-services" class="featured-services">
+    <div class="container" data-aos="fade-up">
+        <div class="row justify-content-center">
+            @foreach (var tarih in Model)
+            {
+                 <div class="col-md-6 col-lg-4 d-flex align-items-stretch my-3 mb-lg-0 justify-content-center">
+                    <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
+                        <h2 class="title text-center fs-1"><a>@tarih.GunAy</a></h2>
+                        <h2 class="title text-center fs-1"><a>@tarih.Yil</a></h2>
+                        <p class="description">@tarih.Aciklama</p>
+                     </div>
+                 </div>
+            }
+        </div>
+
+    </div>
+</section><!-- End Featured Services Section -->

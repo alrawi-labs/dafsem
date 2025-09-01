@@ -1,0 +1,365 @@
+﻿<!DOCTYPE html>
+<html lang="@System.Threading.Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName" dir="@(System.Threading.Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName == "ar" ? "rtl" : "ltr")">
+@{
+    string successMessage = TempData["Success"] as string;
+    var successModal = new AlerModal(
+        modelId: "successModal",
+        title: "İşlem Başarılı",
+        message: successMessage,
+        modalType: "success"
+    );
+
+    string ErrorMessage = TempData["Error"] as string;
+    var ErrorModal = new AlerModal(
+        modelId: "ErrorModal",
+        title: "İşlem Başarısız",
+        message: ErrorMessage,
+        modalType: "danger"
+    );
+}
+
+
+<head>
+    <meta charset='utf-8'>
+    <meta content='width=device-width, initial-scale=1.0' name='viewport'>
+    <meta name='csrf-token' content='@Html.AntiForgeryToken()' />
+
+    <title>@AyarService.GetSiteAdi()Admin</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="@AyarService.GetSiteLogo()" />
+    <link href="@AyarService.GetSiteLogo()" type="image/png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="~/Admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/lib/bootstrap/dist/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Admin/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/Admin/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="~/Admin/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="~/Admin/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="~/Admin/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="~/Admin/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="~/Admin/css/style.css" rel="stylesheet">
+
+    <!-- RTL Support for Arabic -->
+    @if (System.Threading.Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName == "ar")
+    {
+        <link href="~/Admin/vendor/bootstrap/css/bootstrap.rtl.min.css" rel="stylesheet">
+        <style>
+            body {
+                direction: rtl;
+                text-align: right;
+            }
+            
+            .sidebar {
+                right: 0;
+                left: auto;
+            }
+            
+            .main {
+                margin-right: 300px;
+                margin-left: 0;
+            }
+            
+            .header {
+                right: 300px;
+                left: 0;
+            }
+            
+            @@media (max-width: 1199px) {
+                .main {
+                    margin-right: 0;
+                }
+                
+                .header {
+                    right: 0;
+                }
+            }
+        </style>
+    }
+
+    <!-- Scripts bölümü burada render edilir -->
+    @RenderSection("HeadLinks", required: false)
+
+</head>
+
+<body>
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
+
+        <div class="d-flex align-items-center justify-content-between">
+            <a href="@Url.Action("Index","Anasayfa")" class="logo d-flex align-items-center">
+                <img src="@AyarService.GetSiteLogo()" alt="">
+                <span class="d-none d-lg-block">@AyarService.GetSiteAdi()Admin</span>
+            </a>
+            <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div><!-- End Logo -->
+
+
+        <nav class="header-nav ms-auto">
+            <ul class="d-flex align-items-center">
+                @await Component.InvokeAsync("LanguageChange")
+
+                @await Component.InvokeAsync("OnayBekleyenHesaplar")
+                <partial name="_LoginPartial"></partial>
+
+            </ul>
+        </nav><!-- End Icons Navigation -->
+
+    </header><!-- End Header -->
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link" target="_blank" asp-action="Index" asp-controller="Home">
+                    <i class="bi bi-grid"></i>
+                    <span>Kullanıcı Sitesi</span>
+                </a>
+            </li><!-- End Dashboard Nav -->
+
+            <li class="nav-heading">Pages</li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" asp-controller="AnaSayfa" asp-action="Index">
+                    <i class="bi bi-house-fill"></i>
+                    <span>Ana Sayfa</span>
+                </a>
+            </li><!-- End Profile Page Nav -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#kurul-nav" data-bs-toggle="collapse" href="#">
+                    <i class="ri-team-fill"></i><span>Kurul</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="kurul-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a asp-controller="KurulUyeleri" asp-action="Index">
+                            <i class="bi bi-people-fill"></i><span>Kurul Üyeleri</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Unvan" asp-action="Index">
+                            <i class="bx bxs-award"></i><span>Kurul Üye Ünvanları</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="KurulKategorileri" asp-action="Index">
+                            <i class="bx bxs-category-alt"></i><span>Kurul Kategorileri</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li><!-- End Icons Nav -->
+
+            <li class="nav-item">
+                <a asp-action="Index" asp-controller="Basliklar" class="nav-link collapsed">
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                    <span>Başlıklar</span>
+                </a>
+            </li><!-- End Contact Page Nav -->
+
+            <li class="nav-item">
+                <a asp-controller="Tarihler" asp-action="Index" class="nav-link collapsed">
+                    <i class="bi bi-calendar-fill"></i> Tarihler
+
+                </a>
+            </li><!-- End Register Page Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#kural-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-file-lock2-fill"></i><span>Kurallar</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="kural-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a asp-controller="Kurallar" asp-action="Index">
+                            <i class="ri-list-check-2"></i><span>Kurallar Listesi</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="KuralTuru" asp-action="Index">
+                            <i class="bx bxs-category"></i><span>Kural Türü</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li><!-- End Icons Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#hizmet-nav" data-bs-toggle="collapse" href="#">
+                    <i class="ri ri-service-fill"></i><span>Hizmetler</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="hizmet-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a asp-controller="Hizmetler" asp-action="Index">
+                            <i class="bi bi-map-fill"></i><span>Hizmetler Listesi</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="HizmetTuru" asp-action="Index">
+                            <i class="ri ri-leaf-fill"></i><span>Hizmet Türü</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li><!-- End Icons Nav -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#ucret-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-currency-exchange"></i><span>Ücretler</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="ucret-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a asp-action="Index" asp-controller="Ucretler">
+                            <i class="bi bi-cash-stack"></i>
+                            <span>Ücretler</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="ParaBirimi" asp-action="Index">
+                            <i class="">₺</i><span>Para Birimleri</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li><!-- End Icons Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#konaklama-nav" data-bs-toggle="collapse" href="#">
+                    <i class="ri ri-building-4-fill"></i><span>Konaklama</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="konaklama-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a asp-action="Index" asp-controller="Konaklama">
+                            <i class="bi bi-house-fill"></i>
+                            <span>Konaklama Evleri</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="OdaTipleri" asp-action="Index">
+                            <i class="ri-building-2-fill"></i><span>Oda Tipleri</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li><!-- End Icons Nav -->
+
+            <li class="nav-item">
+                <a asp-action="Index" asp-controller="BankaBilgileri" class="nav-link collapsed">
+                    <i class="bx bxs-bank"></i>
+                    <span>Banka Bilgiler</span>
+                </a>
+            </li><!-- End Login Page Nav -->
+
+
+            <li class="nav-item">
+                <a asp-action="Index" asp-controller="Basvuru" class="nav-link collapsed">
+                    <i class="bx bx-paper-plane"></i>
+                    <span>Başvuru</span>
+                </a>
+            </li><!-- End Login Page Nav -->
+
+            <li class="nav-item">
+                <a asp-action="Index" asp-controller="Iletisim" class="nav-link collapsed">
+                    <i class="bx bxs-contact"></i>
+                    <span>İletişim</span>
+                </a>
+            </li><!-- End İletişim Page Nav -->
+
+            <li class="nav-item">
+                <a asp-action="Index" asp-controller="Dil" class="nav-link collapsed">
+                    <i class="bi bi-translate"></i>
+                    <span>Diller</span>
+                </a>
+            </li><!-- End Login Page Nav -->
+
+            <li class="nav-item">
+                <a asp-action="Index" asp-controller="EkSayfalar" class="nav-link collapsed">
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                    <span>Ek Sayfalar</span>
+                </a>
+            </li><!-- End Ek Sayfalar Page Nav -->
+
+            <li class="nav-item">
+                <a asp-action="Index" asp-controller="Ayarlar" class="nav-link collapsed">
+                    <i class="bi bi-gear-fill"></i>
+                    <span>Ayarlar</span>
+                </a>
+            </li><!-- End Ayarlar Page Nav -->
+
+            <li class="nav-item">
+                <partial name="_AdminlerPartial"></partial>
+            </li><!-- End Icons Nav -->
+
+
+
+        </ul>
+
+    </aside><!-- End Sidebar-->
+
+    <main id="main" class="main">
+        @if (successMessage != null)
+        {
+            <partial name="Components/Model/_AlertModal" model="successModal" />
+        }
+        @if (ErrorMessage != null)
+        {
+            <partial name="Components/Model/_AlertModal" model="ErrorModal" />
+        }
+        @RenderBody()
+    </main>
+    <!-- ======= Footer ======= -->
+    <footer id="footer" class="footer">
+        <div class="copyright">
+            &copy; Copyright <strong><span>@AyarService.GetKurumAdi()</span></strong>. All Rights Reserved
+        </div>
+
+    </footer><!-- End Footer -->
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="~/Admin/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="~/Admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Admin/vendor/chart.js/chart.umd.js"></script>
+    <script src="~/Admin/vendor/echarts/echarts.min.js"></script>
+    <script src="~/Admin/vendor/quill/quill.js"></script>
+    <script src="~/Admin/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="~/Admin/vendor/tinymce/tinymce.min.js"></script>
+    <script src="~/Admin/vendor/php-email-form/validate.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.map"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <!-- Template Main JS File -->
+    <script src="~/Admin/js/main.js"></script>
+    <script src="~/lib/bootstrap/dist/bootstrap.min.js"></script>
+
+    <script>
+        // Modal handling
+        if ($('#successModal').length) {
+            $('#successModal').modal('show');
+        }
+
+        // Modal handling
+        if ($('#ErrorModal').length) {
+            $('#ErrorModal').modal('show');
+        }
+        // Sayfa yüklenince CSRF token'ı al ve global bir değişkende sakla
+        const csrfToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        // Global değişkeni bir obje içinde saklayabilirsiniz
+        window.csrfToken = csrfToken;
+    </script>
+
+
+    <!-- Scripts bölümü burada render edilir -->
+    @RenderSection("Scripts", required: false)
+</body>
+
+</html>

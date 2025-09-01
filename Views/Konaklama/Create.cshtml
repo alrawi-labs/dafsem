@@ -1,0 +1,354 @@
+﻿@model dafsem.Models.Konaklama
+
+@{
+    ViewData["Title"] = "Yeni Konaklama Ekle";
+    string optionlar = "";
+    var birimler = ViewBag.Birimler ; // SelectList olarak cast edelim
+
+    if (birimler != null)
+    {
+        foreach (var item in birimler.Result)
+        {
+            optionlar += $"<option value='{item.Value}'>{item.Text}</option>";
+        }
+    }
+
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Yeni Konaklama Ekle</h3>
+            <a asp-action="Index" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left-circle"></i> Geri Dön
+            </a>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <!-- Konaklama Evi -->
+                <div class="my-3">
+                    <label asp-for="KonaklamaEvi" class="form-label fw-bold"></label>
+                    <input asp-for="KonaklamaEvi" class="form-control" placeholder="Konaklama Evi Adını Giriniz" />
+                    <span asp-validation-for="KonaklamaEvi" class="text-danger"></span>
+                </div>
+
+                <!-- Adres -->
+                <div class="my-3">
+                    <label asp-for="Adres" class="form-label fw-bold"></label>
+                    <input asp-for="Adres" class="form-control" placeholder="Adres Giriniz" />
+                    <span asp-validation-for="Adres" class="text-danger"></span>
+                </div>
+
+                <!-- Telefon -->
+                <div class="my-3">
+                    <label asp-for="Tel" class="form-label fw-bold"></label>
+                    <input asp-for="Tel" class="form-control" placeholder="Telefon Numarasını Giriniz" />
+                    <span asp-validation-for="Tel" class="text-danger"></span>
+                </div>
+
+                <!-- E-posta -->
+                <div class="my-3">
+                    <label asp-for="Eposta" class="form-label fw-bold"></label>
+                    <input asp-for="Eposta" class="form-control" placeholder="E-posta Adresini Giriniz" />
+                    <span asp-validation-for="Eposta" class="text-danger"></span>
+                </div>
+
+                <!-- Web Sitesi -->
+                <div class="my-3">
+                    <label asp-for="WebSitesi" class="form-label fw-bold"></label>
+                    <input asp-for="WebSitesi" class="form-control" placeholder="Web Sitesi Giriniz" />
+                    <span asp-validation-for="WebSitesi" class="text-danger"></span>
+                </div>
+
+                <!-- Yıldız Sayısı -->
+                <div class="mb-3">
+                    <label asp-for="YildizSayisi" class="form-label fw-bold"></label>
+                    <select asp-for="YildizSayisi"
+                            class="form-select">
+                        <option value="">Yıldız Sayısı Seçin</option>
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <option value="@i">@i Yıldız</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Kahvaltı Dahil -->
+                <div class="my-3">
+                    <label asp-for="KahvaltiDahilMi" class="form-label fw-bold">Kahvaltı Dahil mi?</label>
+                    <select asp-for="KahvaltiDahilMi" class="form-select" aria-label="Kahvaltı Dahil mi?">
+                        <option value="" selected disabled>Seçiniz</option>
+                        <option value="true">Evet</option>
+                        <option value="false">Hayır</option>
+                    </select>
+                    <span asp-validation-for="KahvaltiDahilMi" class="text-danger"></span>
+                </div>
+
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@{
+    var OdaTiperleriEkleModal = new ModalViewModel
+            {
+                ModalId = "OdaTiperleriEkleModal",
+                Title = "Eklenen Konaklama Evine Yeni Oda Ekle",
+
+                Body = @"
+        <div asp-validation-summary='ModelOnly' class='text-danger'></div>
+            <div class='form-group'>
+                <label class='control-label'>Oda Tipi</label>
+                <input id='inOdaTipi' class='form-control' />
+                <span id='valOdaTipi' class='text-danger'></span>
+            </div>
+            <div class='mb-3'>
+                <label class='form-label'>Ücret</label>
+                <div class='input-group'>
+                    <input id='inUcret' class='form-control' style='width:70%' />
+
+                    <select id='birim'class='form-select' asp-items='@ViewBag.Birimler' style='width:30%'>
+                        <option value='' >Birim seçiniz...</option>
+                        " + optionlar + @"
+                    </select>
+                    <span id='valUcret' class='text-danger'></span>
+                    <span id='valBirim' class='text-danger'></span>
+                </div>
+            </div>
+            <div class='mb-3'>
+                <label class='form-label'>Konaklama Evi</label>
+                <select disabled class='form-select'>
+                     <option >" + ViewBag.KonaklamaBaslik + @"</option>
+                </select>
+
+            </div>
+            <p style='font-size: 0.875rem; font-weight: 300; color: #6c757d;'>Odaları şimdi eklemeyebilir, daha sonra <strong>Oda Tipleri</strong> seçeneğinden ekleyebilirsiniz</p>
+            ",
+                ConfirmButtonId = "YeniBirOdaEkle",
+                ButtonLabel = "Yeni Bir Oda Ekle"
+
+
+            };
+
+    var MevcutOdaTipleriModal = new ModalViewModel
+            {
+                ModalId = "MevcutOdaTipleriModal",
+                Title = "Bu Konaklama Evine Ait Odalar",
+                Body = @"
+
+",
+                TitleBackground = "info"
+
+            };
+
+    List<ModalViewModel> modals = new List<ModalViewModel>();
+    modals.Add(OdaTiperleriEkleModal);
+    modals.Add(MevcutOdaTipleriModal);
+
+
+
+
+
+    var hataModeli = new AlerModal(
+
+        modelId: "hataModeli",
+        title: "Başarsız Giriş",
+        message: "Bir hata oluştu, lütfen kontrol edin!",
+        modalType: "danger"
+    );
+
+
+    var basariModeli = new AlerModal(
+
+       modelId: "basariModeli",
+       title: "Başarılı İşlem",
+       message: "Oda tipini başarılı bir şekilde silinmiştir",
+       modalType: "success"
+           );
+
+
+
+}
+
+
+
+
+<partial name="Components/Model/_DoubleModal" model="modals" />
+<partial name="Components/Model/_AlertModal" model="hataModeli" />
+<partial name="Components/Model/_AlertModal" model="basariModeli" />
+
+
+
+@section Scripts {
+
+    <script>
+
+        @{
+            int konaklamaId = 0;
+        }
+
+        @if (ViewBag.konaklamaId != null)
+        {
+            konaklamaId = ViewBag.konaklamaId;
+        }
+
+        if (@konaklamaId != 0) {
+            var konaklamaId = @konaklamaId
+                console.log("id getirildi:" + konaklamaId)
+            $('#KonaklamaEvi').val('')
+            $('#Adres').val('')
+            $('#Tel').val('')
+            $('#Eposta').val('')
+            $('#WebSitesi').val('')
+            $('#YildizSayisi').val('')
+            $('#KahvaltiDahilMi').val('')
+            showAddOdalar();
+        }
+        function deleteOda(odaId) {
+
+            var formData = new FormData();
+            formData.append('id', odaId)
+            formData.append('konaklamaId', konaklamaId)
+
+            fetch("@Url.Action("DeleteOda", "OdaTipleri")", {
+                headers: {
+                    'RequestVerificationToken': csrfToken
+                },
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (!response.ok) {
+                    $('#hataModeli-Message').text('Silme işlemi sırasında bir hata oluştu')
+                    $('#hataModeli').modal('show')
+
+                }
+                else {
+                }
+
+                return response.text();
+            }).then(data => {
+                const modalBody = document.querySelector('#MevcutOdaTipleriModal-body');
+                modalBody.innerHTML = data;
+                $('#basariModeli').modal('show')
+            })
+
+        }
+
+
+
+
+        function showAddOdalar() {
+            const modalElement1 = document.getElementById('OdaTiperleriEkleModal');
+            // İlk modal'ı göster
+            const modal1 = new bootstrap.Modal(modalElement1);
+            console.log("showAddOdalar()")
+
+            $('#YeniBirOdaEkle').click(function (event) {
+
+                var odaTipi = $('#inOdaTipi').val();
+                var ucret = $('#inUcret').val();
+                var birim = $('#birim').val();
+                var formData = new FormData();
+
+                formData.append('OdaTipi', odaTipi)
+                formData.append('Ucret', ucret)
+                formData.append('Birim', birim)
+                formData.append('KonaklamaEvi', konaklamaId)
+
+
+                var btnContent = $('#YeniBirOdaEkle').html()
+                $('#YeniBirOdaEkle').html('<span style="margin-bottom: 3px;" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Ekleniyor...')
+
+
+
+                fetch("@Url.Action("CreateAndGet", "OdaTipleri")", {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': csrfToken
+                    },
+                    body: formData
+                })
+                    .then(response => {
+                        console.log(response)
+                        if (!response.ok) {
+                            // Eğer HTTP durumu 2xx değilse hata at
+                            return response.json().then(errorData => {
+                                // Her bir hata alanını ve mesajlarını döngü ile işle
+                                var data = errorData.errors;
+                                for (const key in data) {
+                                    if (data.hasOwnProperty(key)) {
+                                        $('#val' + key).text(data[key])
+                                    }
+                                }
+                                $('#YeniBirOdaEkle').html(btnContent);
+                                $('#hataModeli-Message').text('Girdiğiniz bilgilerde hata vardır, lütfen kontrol edin!')
+
+                                $('#hataModeli').modal('show')
+                                throw new Error(`HTTP hata kodu: ${response.status}`);
+                            });
+
+
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        // Modal 2 içeriğini güncelle
+                        const modalBody = document.querySelector('#MevcutOdaTipleriModal-body');
+
+
+                        modalBody.innerHTML = data;
+                        $('#YeniBirOdaEkle').addClass('btn-success');
+                        $('#inOdaTipi').val('');
+                        $('#inUcret').val('');
+                        $('#valOdaTipi').text('');
+                        $('#valUcret').text('');
+                        $('#valBirim').text('');
+
+                        $('#YeniBirOdaEkle').html('Başarıyla Eklendi')
+                        setTimeout(function () {
+                            $('#YeniBirOdaEkle').removeClass('btn-success');
+                            $('#YeniBirOdaEkle').html(btnContent);
+                        }, 2000);
+
+
+                    })
+                    .catch(error => {
+                        $('#YeniBirOdaEkle').html(btnContent);
+                        $('#hataModeli').modal('show')
+                        console.error('Hata:', error);
+                    });
+            }
+            )
+            modal1.show();
+
+            // İlgili konaklama ID'sini al
+
+            // AJAX ile odaları çek
+
+            fetch("@Url.Action("GetRooms", "OdaTipleri")?konaklamaId=${@konaklamaId}")
+                .then(response => response.text())
+                .then(data => {
+                    // Modal 2 içeriğini güncelle
+                    const modalBody = document.querySelector('#MevcutOdaTipleriModal-body');
+                    modalBody.innerHTML = data;
+
+                })
+                .catch(error => {
+                    console.error('Hata:', error);
+                });
+        }
+
+    </script>
+
+}

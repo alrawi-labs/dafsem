@@ -1,0 +1,60 @@
+﻿@model SayfaDetayViewModel
+
+@{
+    ViewData["Title"] = "Sil";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-lg border-0 rounded-4 w-100">
+        <div class="card-header bg-gradient bg-danger text-white text-center py-4 rounded-top">
+            <h3 class="mb-0">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> Ek Sayfa Bilgileri
+            </h3>
+        </div>
+        <div class="card-body px-4 py-5">
+            <p class="text-muted text-center fs-5">Silmek istediğiniz ek sayfa bilgileri aşağıda listelenmiştir.</p>
+            <h5><strong>Sayfa Başlığı:</strong> @Model.Sayfa.SayfaBasligi</h5>
+            <h5><strong>Sayfa Linki:</strong> @Model.Sayfa.Url</h5>
+            <h3 class="text-center">Sayfa Önizlemesi</h3>
+            <div class="p-3 border rounded bg-light shadow-sm">
+                @await Html.PartialAsync("_BilesenlerPartial", Model)
+            </div>
+
+            <div class="mt-5 d-flex justify-content-center gap-4">
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Sayfa.Id" name="Id" />
+                    <button type="submit" class="btn btn-danger px-5 py-2 fw-bold shadow-sm transition">
+                        <i class="bi bi-trash-fill"></i> Sil
+                    </button>
+                </form>
+                <a asp-action="Index" class="btn btn-outline-dark px-5 py-2 fw-bold shadow-sm transition">
+                    <i class="bi bi-arrow-left-circle"></i> Listeye Dön
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    .transition {
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-danger:hover {
+        background-color: #b71c1c !important;
+        transform: scale(1.05);
+    }
+
+    .btn-outline-dark:hover {
+        background-color: #343a40 !important;
+        color: white !important;
+        transform: scale(1.05);
+    }
+</style>

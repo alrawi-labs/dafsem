@@ -1,0 +1,37 @@
+﻿@using dafsem.Models.ViewModels.UserSite
+@model List<KategoriUyelerViewModel>
+@{
+    Layout = "UserSite/_Layout";
+}
+<section id="featured-services" class="featured-services">
+
+    <div class="container d-flex justify-content-center" data-aos="fade-up">
+
+        <div class="w-75 justify-content-center">
+            @foreach (KategoriUyelerViewModel Kategori in Model)
+            {
+                <ul class="w-auto">
+                    @if (Kategori.Kategori != null)
+                    {
+                        <h3 class="bg-black w-auto text-white p-2 rounded-1 text-center"
+                            style="font-family: marcellus, marcellus, serif !important;">
+                            @Kategori?.Kategori
+                        </h3>
+                    }
+                  
+                    @if (Kategori?.Uye != null)
+                    {
+                        foreach (string uye in Kategori.Uye)
+                        {
+                            <li style="font-family: marcellus, marcellus, serif !important; margin-left: 35px;"
+                                class="fs-5">
+                                @uye
+                            </li>
+                        }
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+</section>
+<!--End Düzenleme Kurulu Section-->

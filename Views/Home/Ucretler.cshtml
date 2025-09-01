@@ -1,0 +1,68 @@
+﻿@using dafsem.Models.ViewModels.UserSite
+@model UcretHizmetBankaViewModel
+@{
+    Layout = "UserSite/_Layout";
+}
+<section id="featured-services" class="featured-services">
+    <div class="container" data-aos="fade-up">
+        <div class="row">
+            <table class="table">
+                <tbody>
+                    @foreach (var ucret in Model.Ucretler)
+                    {
+                        <tr>
+                            <td class="fw-bold text-center col-6">@ucret.Baslik</td>
+                            <td class="fw-bold text-center col-6">@ucret.Ucret</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="mt-5">
+
+                @foreach (var tur in Model.HizmetTurler)
+                {
+                    @if (tur.Hizmetler.Count == 0)
+                    {
+                        continue;
+                    }
+                    <ul class="w-auto">
+                        <h3 class="bg-black w-auto text-white p-2 rounded-1"
+                            style="font-family: marcellus, marcellus, serif !important;">
+                            @tur.Tur
+                        </h3>
+                        @foreach (var hizmet in tur.Hizmetler)
+                        {
+                            <li style="font-family: marcellus, marcellus, serif !important; margin-left: 35px;"
+                                class="fs-5">@hizmet</li>
+                        }
+                    </ul>
+                }
+                <ul class="w-auto">
+                    <h3 class="bg-black w-auto text-white p-2 rounded-1"
+                        style="font-family: marcellus, marcellus, serif !important;">
+                        Kayıt Ücretinin Ödenmesi
+                        İçin Banka Hesap Numarası
+                    </h3>
+                    @foreach (var banka in Model.Bankalar)
+                    {
+
+                        <h4 style="font-family: marcellus, marcellus, serif !important; margin-left: 20px;"
+                            class="fs-5">
+                            @banka.BankaAdi
+                        </h4>
+                        <h4 style="font-family: marcellus, marcellus, serif !important; margin-left: 20px;"
+                            class="fs-5">
+                            @banka.HesapSahibiAdi
+                        </h4>
+                        <h4 style="font-family: marcellus, marcellus, serif !important; margin-left: 20px;"
+                            class="fs-5">
+                            IBAN: @banka.IBAN
+                        </h4>
+                        <hr />
+                    }
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</section>

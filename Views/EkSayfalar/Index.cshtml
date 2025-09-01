@@ -1,0 +1,64 @@
+﻿@model IEnumerable<dafsem.Models.EkSayfalar>
+
+@{
+    ViewData["Title"] = "Ek Sayfalar Yönetimi";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-secondary">Ek Sayfalar</h2>
+    <a class="btn btn-outline-primary" asp-action="Create">
+        <i class="bi bi-file-earmark-plus"></i> Yeni Sayfa Ekle
+    </a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.SayfaBasligi)</th>
+                <th>@Html.DisplayNameFor(model => model.Url)</th>
+                <th>@Html.DisplayNameFor(model => model.BulunduguSayfa)</th>
+                <th class="text-center">İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-truncate" style="max-width: 250px;" title="@item.SayfaBasligi">
+                        @Html.DisplayFor(modelItem => item.SayfaBasligi)
+                    </td>
+                    <td class="text-truncate" style="max-width: 250px;" title="@item.Url">
+                        <a href="@item.Url" target="_blank" class="text-decoration-none">
+                            <i class="bi bi-link-45deg me-1"></i>@item.Url
+                        </a>
+                    </td>
+                    <td>
+                        @if (item.BulunduguSayfa != null)
+                        {
+                            @Html.DisplayFor(modelItem => item.BulunduguSayfa.Url)
+                        }
+                        else
+                        {
+                            @:Yok
+                        }
+                    </td>
+                    <td class="text-center">
+                        <div class="btn-group" role="group">
+                            <a class="btn btn-warning btn-sm d-flex align-items-center" asp-action="Edit" asp-route-id="@item.Id">
+                                <i class="bi bi-pencil-square me-1"></i> Düzenle
+                            </a>
+                            <a class="btn btn-info btn-sm d-flex align-items-center" asp-action="Details" asp-route-id="@item.Id">
+                                <i class="bi bi-info-circle me-1"></i> Detaylar
+                            </a>
+                            <a class="btn btn-danger btn-sm d-flex align-items-center" asp-action="Delete" asp-route-id="@item.Id">
+                                <i class="bi bi-trash3 me-1"></i> Sil
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

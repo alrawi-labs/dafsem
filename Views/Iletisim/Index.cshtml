@@ -1,0 +1,53 @@
+﻿@model dafsem.Models.Iletisim
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="d-flex justify-content-between card-header bg-info text-white">
+            <h3 class="mb-0">İletişim Bilgileri</h3>
+            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model?.Id">
+                <i class="bi bi-pencil-square"></i> Güncelle
+            </a>
+        </div>
+        <div class="card-body">
+            
+            <div class="table-responsive mt-4">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.Eposta)</th>
+                            <td>@Html.DisplayFor(model => model.Eposta)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="width: 30%;">@Html.DisplayNameFor(model => model.Adres)</th>
+                            <td>@Html.DisplayFor(model => model.Adres)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Telefon Listesi -->
+                <h5 class="mt-4">Telefonlar</h5>
+                <ul class="list-group">
+                    @foreach (var telefon in Model.Telefonlar)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Telefon:</strong> @telefon.Tel
+                                @if (!string.IsNullOrEmpty(telefon.Dahili))
+                                {
+                                    <span class="text-muted ms-3"><strong>Dahili:</strong> @telefon.Dahili</span>
+                                }
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+

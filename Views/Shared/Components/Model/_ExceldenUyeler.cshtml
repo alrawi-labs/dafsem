@@ -1,0 +1,144 @@
+﻿@model List<KurulUyeleri>[]
+
+<style>
+    /* Sabit başlık için ek CSS */
+    .modal {
+        overflow-y: auto;
+    }
+</style>
+<!-- Add a Bootstrap container for better alignment -->
+<div class="container mt-4">
+    <!-- Correct Data Table -->
+    <h3 class="mb-4">Doğru Veriler</h3>
+    <table class="table table-success table-bordered table-striped">
+        <thead class="thead">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model[0][0].Unvan.UnvanAdi)</th>
+                <th>@Html.DisplayNameFor(model => model[0][0].Adi)</th>
+                <th>@Html.DisplayNameFor(model => model[0][0].Soyadi)</th>
+                <th>@Html.DisplayNameFor(model => model[0][0].Kurum)</th>
+                <th>@Html.DisplayNameFor(model => model[0][0].KategoriId)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model[0])
+            {
+                <tr>
+                    <td>@item.Unvan.UnvanAdi</td>
+                    <td>@item.Adi</td>
+                    <td>@item.Soyadi</td>
+                    <td>@item.Kurum</td>
+                    <td>@item.KategoriId.Baslik</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button onclick="sendCorrectData()" class="btn btn-success mb-5"><i class="bi bi-bookmark-plus-fill"></i> Doğru Verileri Ekle</button>
+
+    <!-- Incorrect Data Table -->
+    <h3 class="mb-4">Hatalı Veriler</h3>
+    <table class="table table-danger table-bordered table-striped">
+        <thead class="thead">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model[0][0].Unvan.UnvanAdi)</th>
+                <th>@Html.DisplayNameFor(model => model[0][0].Adi)</th>
+                <th>@Html.DisplayNameFor(model => model[0][0].Soyadi)</th>
+                <th>@Html.DisplayNameFor(model => model[0][0].Kurum)</th>
+                <th>@Html.DisplayNameFor(model => model[0][0].KategoriId)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model[1])
+            {
+                <tr>
+                    <td>@item.Unvan.UnvanAdi</td>
+                    <td>@item.Adi</td>
+                    <td>@item.Soyadi</td>
+                    <td>@item.Kurum</td>
+                    <td>@item.KategoriId?.Baslik</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button onclick="downloadField()" class="btn btn-warning mb-5"><i class="bi bi-cloud-download-fill"></i> Hatalı Kayıtları İndir</button>
+
+</div>
+
+
+
+<script>
+    async function sendCorrectData() {
+        const modelData = @Html.Raw(Json.Serialize(Model[0]));
+
+        // Doğru JSON formatına getir
+        const postData = modelData.map(item => ({
+            Adi: item.adi,
+            Soyadi: item.soyadi,
+            Kurum: item.kurum,
+            KategoriId: item.kategoriId?.id || 0, // Sadece ID gönder
+            UnvanId: item.unvan?.id || null // Send UnvanId instead of full object
+        }));
+
+        console.log(postData)
+
+        try {
+            const response = await fetch("@Url.Action("ExceldenKurulUyeleriEkle", "KurulUyeleri")", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify(postData)
+            });
+            if (!response.ok) {
+                console.log(`HTTP error! Status: ${response.status}`)
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data)
+            if (data.success) {
+                // Kullanıcıyı yönlendir
+                window.location.href = data.redirectUrl;
+            } else {
+                console.error("Bir hata oluştu:", data.message || "Bilinmeyen bir hata");
+            }
+        } catch (error) {
+            console.log("Hata:", error);
+        }
+    }
+
+    function downloadField() {
+        // Model[1] içindeki hatalı kurul listesini alıyoruz
+        const hataliKurulListesi = @Html.Raw(Json.Serialize(Model[1]));
+
+        // Başlıklar ve verileri birleştiriyoruz
+        const data = [
+            ["Ünvan", "Adı", "Soyadı", "Kurum", "Kategori"], // Başlıklar
+            ...hataliKurulListesi.map(uye => [
+                uye.unvan,                               // Ünvan
+                uye.adi,                                 // Adı
+                uye.soyadi,                              // Soyadı
+                uye.kurum,                               // Kurum
+                uye.kategoriId?.baslik || "Kategori alanı boştur" // Kategori
+            ])
+        ];
+
+        // Yeni bir çalışma kitabı oluştur
+        const worksheet = XLSX.utils.aoa_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+
+        // Çalışma kitabına çalışma sayfasını ekle
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Kurul Uyeleri");
+
+        // Dosyayı indir
+        XLSX.writeFile(workbook, "KurulUyeleriHataliKayitlar.xlsx");
+    }
+
+
+
+
+
+</script>

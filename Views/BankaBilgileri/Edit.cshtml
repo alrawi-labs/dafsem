@@ -1,0 +1,70 @@
+﻿@model dafsem.Models.BankaBilgileri
+
+@{
+    ViewData["Title"] = "Banka Bilgileri Güncelle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Banka Bilgileri Güncelle</h3>
+            <a asp-action="Index" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left-circle"></i> Geri Dön
+            </a>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <!-- Banka Adı -->
+                <div class="my-3">
+                    <label asp-for="BankaAdi" class="form-label fw-bold"></label>
+                    <input asp-for="BankaAdi" class="form-control" placeholder="Banka adını giriniz" />
+                    <span asp-validation-for="BankaAdi" class="text-danger"></span>
+                </div>
+
+                <!-- Hesap Sahibi Adı -->
+                <div class="mb-3">
+                    <label asp-for="HesapSahibiAdi" class="form-label fw-bold"></label>
+                    <input asp-for="HesapSahibiAdi" class="form-control" placeholder="Hesap sahibinin adını giriniz" />
+                    <span asp-validation-for="HesapSahibiAdi" class="text-danger"></span>
+                </div>
+
+                <!-- IBAN -->
+                <div class="mb-3">
+                    <label asp-for="IBAN" class="form-label fw-bold"></label>
+                    <input asp-for="IBAN" class="form-control" id="ibanInput" maxlength="34" placeholder="IBAN giriniz" />
+                    <span asp-validation-for="IBAN" class="text-danger"></span>
+                </div>
+
+                <!-- Güncelle Butonu -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Güncelle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script>
+    document.getElementById("ibanInput").addEventListener("input", function (e) {
+        let value = e.target.value.replace(/\s+/g, "").toUpperCase(); // Boşlukları kaldır ve büyük harfe çevir
+        let formatted = "";
+
+        // Her 4 karakterde bir boşluk ekle
+        for (let i = 0; i < value.length; i += 4) {
+            formatted += value.substr(i, 4) + " ";
+        }
+
+        e.target.value = formatted.trim(); // Son boşluğu kaldır
+    });
+</script>

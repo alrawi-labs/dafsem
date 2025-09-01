@@ -1,0 +1,34 @@
+﻿@model dafsem.Models.Hizmetler
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h3 class="mb-0">Hizmet Detayları</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive mt-4">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.Hizmet)</th>
+                            <td>@Html.DisplayFor(model => model.Hizmet)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.Turu)</th>
+                            <td>@Html.DisplayFor(model => model.Turu.Tur)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model?.Id">
+                    <i class="bi bi-pencil-square"></i> Güncelle
+                </a>
+                <a class="btn btn-secondary" asp-action="Index">
+                    <i class="bi bi-arrow-left-circle"></i> Geri Dön
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

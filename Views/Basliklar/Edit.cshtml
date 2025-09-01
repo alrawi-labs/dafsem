@@ -1,0 +1,42 @@
+﻿@model dafsem.Models.Basliklar
+
+@{
+    ViewData["Title"] = "Başlık Güncelle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Başlık Güncelle</h3>
+            <a asp-action="Index" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left-circle"></i> Geri Dön
+            </a>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <!-- Başlık -->
+                <div class="my-3">
+                    <label asp-for="Baslik" class="form-label fw-bold"></label>
+                    <input asp-for="Baslik" class="form-control" placeholder="Başlık Giriniz" />
+                    <span asp-validation-for="Baslik" class="text-danger"></span>
+                </div>
+
+                <!-- Başlık -->
+                <div class="my-3">
+                    <input type="hidden" asp-for="State" />
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

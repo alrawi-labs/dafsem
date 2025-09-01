@@ -1,0 +1,63 @@
+﻿@model List<UserViewModel>
+<style>
+    .avatar-circle {
+        width: 60px;
+        height: 60px;
+        background-color: #0d6efd;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #fff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-right: 15px;
+        align-items: center;
+    }
+    }
+</style>
+
+<li class="nav-item dropdown">
+
+    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+        <i class="bi bi-bell"></i>
+        <span class="badge bg-primary badge-number">@Model.Count</span>
+    </a><!-- End Notification Icon -->
+
+    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+        <li class="dropdown-header">
+            Toplam onay bekleyen @Model.Count hesap var
+            <a asp-action="OnayBekleyenHesaplar" asp-controller="Adminler"><span class="badge rounded-pill bg-primary p-2 ms-2">Göster</span></a>
+        </li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        @foreach (var hesap in Model)
+        {
+            <li class="message-item">
+                <a asp-controller="Adminler" asp-action="OnayBekleyenHesaplar" asp-fragment=":~:text=@hesap.Name">
+                    <div class="avatar-circle">
+                        @hesap.Name.Substring(0, 1).ToUpper()
+                    </div>
+                    <div>
+                        <h4>@hesap.Name</h4>
+                        <p>@hesap.Email</p>
+                        <p>@hesap.Roles</p>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+        }
+
+
+        <li class="dropdown-footer">
+            <a asp-action="OnayBekleyenHesaplar" asp-controller="Adminler" >Tüm onay bekleyen hesapları göster</a>
+        </li>
+
+    </ul><!-- End Messages Dropdown Items -->
+
+</li><!-- End Messages Nav -->

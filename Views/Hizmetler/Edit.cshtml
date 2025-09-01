@@ -1,0 +1,65 @@
+﻿@model dafsem.Models.Hizmetler
+
+@{
+    ViewData["Title"] = "Hizmet Güncelle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Hizmet Bilgilerini Güncelle</h3>
+            <a asp-action="Index" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left-circle"></i> Geri Dön
+            </a>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <!-- Hizmet Adı -->
+                <div class="my-3">
+                    <label asp-for="Hizmet" class="form-label fw-bold"></label>
+                    <input asp-for="Hizmet" class="form-control" placeholder="Hizmet adını giriniz" />
+                    <span asp-validation-for="Hizmet" class="text-danger"></span>
+                </div>
+
+                <!-- Hizmet Türü -->
+                <div class="mb-3">
+                    <label asp-for="HizmetTuruId" class="form-label fw-bold"></label>
+                    <div class="input-group">
+                        <select name="HizmetTuruId" asp-for="HizmetTuruId" class="form-select">
+                            @foreach (var item in ViewBag.HizmetTuru)
+                            {
+                                if (Model.HizmetTuruId.ToString() == item.Value)
+                                {
+                                    <option selected value="@item.Value">@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                        <a class="btn btn-secondary" asp-action="Create" asp-controller="HizmetTuru">
+                            <i class="bi bi-plus-circle"></i> Hizmet Türü Ekle
+                        </a>
+                    </div>
+                    <span asp-validation-for="HizmetTuruId" class="text-danger"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Bilgileri Güncelle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

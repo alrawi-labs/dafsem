@@ -1,0 +1,125 @@
+﻿@model List<dafsem.Models.Sayfalar>
+
+<form asp-action="EditSayfalar" method="post">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3>Ayarlar >> Sayfalar - Güncelle</h3>
+            <div>
+                <button type="button" class="btn btn-danger" id="resetButton">Sıfırla</button>
+                <a asp-action="Index" asp-controller="Ayarlar" class="btn btn-secondary">Vazgeç</a>
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <label class="form-label">Sayfa Başlığı</label>
+                            <input type="hidden" name="Model[@i].Id" value="@Model[i].Id" />
+                            <input class="form-control" name="Model[@i].SayfaBasligi" value="@Model[i].SayfaBasligi" />
+                        </div>
+                        <div class="card-body mt-2">
+                            @if (Model[i].AltSayfalari != null && Model[i].AltSayfalari.Any())
+                            {
+                                <h6 class="form-label">Alt Sayfalar</h6>
+                                <div class="d-flex flex-wrap gap-2">
+
+                                    @for (int j = 0; j < Model[i].AltSayfalari.Count; j++)
+                                    {
+                                        <div class="input-group">
+                                            <input type="hidden" name="Model[@i].AltSayfalari[@j].Id" value="@Model[i].AltSayfalari.ElementAt(j).Id" />
+                                            <input type="hidden" name="Model[@i].AltSayfalari[@j].UstSayfaId" value="@Model[i].Id" />
+                                            <input class="form-control w-100" name="Model[@i].AltSayfalari[@j].AltSayfaBaslik" value="@Model[i].AltSayfalari.ElementAt(j).AltSayfaBaslik" />
+                                        </div>
+                                    }
+
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted">Alt sayfa bulunmamaktadır.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</form>
+
+
+@{
+    var modalModel = new ModalViewModel
+            {
+                ModalId = "SayfalariSifirlaModal",
+                Title = "Sayfaları Sıfırlama",
+                Body = @"
+            <p class='my-3 text-danger fw-bold text-center'>
+                Sayfaları sıfırlamak, tüm sayfaların ve alt sayfaların isimlerini varsayılan isimlerine döndürür. Bu işlemden emin misiniz?
+            </p>",
+                ConfirmButtonId = "deleteConfirmButton",
+                ButtonLabel = "Sıfırla",
+                ButtonIcon = "bi bi-arrow-counterclockwise"
+            };
+
+    var sayfalariSifirlaSuccessModel = new AlerModal(
+        "SayfalariSifirlaSuccessModel",
+        "Sayfalar Başarıyla Sıfırlandı",
+        "Tüm sayfaların isimleri başarıyla varsayılana değiştirildi.",
+        "success"
+    );
+
+    var sayfalariSifirlaDangerModel = new AlerModal(
+        "SayfalariSifirlaDangerModel",
+        "Sayfalar Sıfırlanamadı",
+        "Sayfaların sıfırlanması sırasında bir hata oluştu.",
+        "danger"
+    );
+}
+
+<partial name="Components/Model/_DeleteConfirmationModal" model="modalModel" />
+<partial name="Components/Model/_AlertModal" model="sayfalariSifirlaSuccessModel" />
+<partial name="Components/Model/_AlertModal" model="sayfalariSifirlaDangerModel" />
+
+@section Scripts {
+    <script>
+        document.getElementById("resetButton").addEventListener("click", function () {
+            $('#SayfalariSifirlaModal').modal('show')
+        });
+
+        document.getElementById('deleteConfirmButton').addEventListener("click", function () {
+            console.log('Başarılı')
+            // AJAX isteği ile SayfaSifirla action'ını çağır
+
+
+            fetch('@Url.Action("SayfaSifirla", "Ayarlar")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': csrfToken// AntiForgery Token
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // İstek başarılı ise burada işlem yapabilirsiniz
+
+                    if (data.success){
+                        location.reload()
+                        $('#SayfalariSifirlaModal').modal('hide')
+                        $('#SayfalariSifirlaSuccessModel').modal('show')
+                    }
+                    console.log(data);
+                })
+                .catch(error => {
+                    $('#sayfalariSifirlaDangerModel').modal('show')
+                    console.error("Bir hata oluştu:", error);
+                });
+        })
+
+    </script>
+}

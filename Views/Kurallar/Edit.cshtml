@@ -1,0 +1,56 @@
+﻿@model dafsem.Models.Kurallar
+
+@{
+    ViewData["Title"] = "Kural Güncelle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Kural Bilgilerini Güncelle</h3>
+            <a asp-action="Index" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left-circle"></i> Geri Dön
+            </a>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <!-- Metin -->
+                <div class="my-3">
+                    <label asp-for="Metin" class="form-label fw-bold"></label>
+                    <input asp-for="Metin" class="form-control" placeholder="Kural metnini giriniz" />
+                    <span asp-validation-for="Metin" class="text-danger"></span>
+                </div>
+
+                <!-- Türü -->
+                <div class="mb-3">
+                    <label asp-for="KuralTuruId" class="form-label fw-bold"></label>
+                    <div class="input-group">
+                        <select name="KuralTuruId"  asp-for="KuralTuruId" class="form-select">
+                            @foreach (var item in ViewBag.KuralTuru)
+                            {
+                                <option value="@item.Value" selected="@(Model.KuralTuruId.ToString() == item.Value ? "selected" : null)">
+                                    @item.Text
+                                </option>
+                            }
+                        </select>
+                        <a class="btn btn-secondary" asp-action="Create" asp-controller="KuralTuru">
+                            <i class="bi bi-plus-circle"></i> Kural Türü Ekle
+                        </a>
+                    </div>
+                    <span asp-validation-for="KuralTuruId" class="text-danger"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Bilgileri Güncelle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

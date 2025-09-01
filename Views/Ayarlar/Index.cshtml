@@ -1,0 +1,363 @@
+﻿@model dafsem.Models.Ayarlar
+@inject IStringLocalizer<SharedResource> Localizer
+
+@{
+    ViewData["Title"] = Localizer["Settings"];
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .container {
+        padding: 30px 20px;
+    }
+
+    .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .card {
+        border-radius: 15px;
+        background-color: #ffffff;
+        padding: 20px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+    .card-header {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .card-body {
+        font-size: 1rem;
+        color: #666;
+    }
+
+    .btn-warning1 {
+        background-color: #cdc8ff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+        .btn-warning1:hover {
+            background-color: #cdc8ff;
+            transform: scale(1.05);
+        }
+
+    .img-thumbnail {
+        max-height: 100px;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+        width: auto;
+    }
+
+        .img-thumbnail:hover {
+            transform: scale(1.1);
+        }
+
+    .alert-secondary {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 8px 15px;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .fade-in {
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .panel-language-selector {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        padding: 20px;
+        color: white;
+        margin-bottom: 20px;
+    }
+
+        .panel-language-selector h4 {
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+    .panel-language-form {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .panel-language-select {
+        flex: 1;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        background-color: rgba(255, 255, 255, 0.9);
+        color: #333;
+    }
+
+    .panel-language-btn {
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .panel-language-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+    @@keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .container {
+            padding: 20px 10px;
+        }
+
+        .panel-language-form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0">@Localizer["Settings"]</h3>
+        <a class="btn btn-warning1" asp-action="Edit" asp-route-id="@Model?.Id">
+            <i class="bi bi-pencil-square"></i> @Localizer["Update"]
+        </a>
+    </div>
+
+    <!-- Panel Language Değiştirme Bölümü - Düzeltilmiş -->
+    <div class="panel-language-selector fade-in">
+        <h4><i class="bi bi-translate me-2"></i>@Localizer["PanelLanguage"]</h4>
+        <form asp-action="ChangePanelLanguage" method="post" class="panel-language-form">
+            @Html.AntiForgeryToken()
+            @{
+                // Cookie'den dil bilgisini doğru şekilde al
+                var panelLanguageCookie = Context.Request.Cookies["PanelLanguage"];
+                var currentLanguage = "tr-TR"; // Varsayılan dil
+
+                if (!string.IsNullOrEmpty(panelLanguageCookie))
+                {
+                    // ASP.NET Core localization cookie formatı: c=tr-TR|uic=tr-TR
+                    if (panelLanguageCookie.Contains("|"))
+                    {
+                        var parts = panelLanguageCookie.Split('|');
+                        var culturePart = parts.FirstOrDefault(p => p.StartsWith("c="));
+                        if (!string.IsNullOrEmpty(culturePart))
+                        {
+                            currentLanguage = culturePart.Substring(2);
+                        }
+                    }
+                    else
+                    {
+                        // Eski format için backward compatibility
+                        currentLanguage = panelLanguageCookie;
+                    }
+                }
+            }
+            <select name="panelLanguage" class="panel-language-select" required>
+                <option value="">@Localizer["SelectLanguage"]</option>
+                <option value="tr-TR" selected="@(currentLanguage == "tr-TR")">@Localizer["Turkish"]</option>
+                <option value="en-US" selected="@(currentLanguage == "en-US")">@Localizer["English"]</option>
+                <option value="ar-SA" selected="@(currentLanguage == "ar-SA")">@Localizer["Arabic"]</option>
+            </select>
+            <button type="submit" class="panel-language-btn">
+                <i class="bi bi-check-circle me-2"></i>@Localizer["ChangeLanguage"]
+            </button>
+        </form>
+    </div>
+
+    <div class="card-container fade-in">
+        <div class="card">
+            <div class="card-header">@Localizer["SiteName"]</div>
+            <div class="card-body">@Html.DisplayFor(model => model.SiteAdi)</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">@Localizer["InstitutionName"]</div>
+            <div class="card-body">@Html.DisplayFor(model => model.KurumAdi)</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">@Localizer["SiteLogo"]</div>
+            <div class="card-body">
+                @if (Model?.SiteLogo != null)
+                {
+                    <a href="@Model.SiteLogo.Yol" target="_blank">
+                        <img src="@Model.SiteLogo.Yol" alt="@Localizer["SiteLogo"]" class="img-thumbnail">
+                    </a>
+                }
+                else
+                {
+                    <span class="alert alert-secondary">@Localizer["LogoNotFound"]</span>
+                }
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">@Localizer["RightLogo"]</div>
+            <div class="card-body">
+                @if (Model?.SagLogo != null)
+                {
+                    <a href="@Model.SagLogo.Yol" target="_blank">
+                        <img src="@Model.SagLogo.Yol" alt="@Localizer["RightLogo"]" class="img-thumbnail">
+                    </a>
+                }
+                else
+                {
+                    <span class="alert alert-secondary">@Localizer["LogoNotFound"]</span>
+                }
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">@Localizer["LeftLogo"]</div>
+            <div class="card-body">
+                @if (Model?.SolLogo != null)
+                {
+                    <a href="@Model.SolLogo.Yol" target="_blank">
+                        <img src="@Model.SolLogo.Yol" alt="@Localizer["LeftLogo"]" class="img-thumbnail">
+                    </a>
+                }
+                else
+                {
+                    <span class="alert alert-secondary">@Localizer["LogoNotFound"]</span>
+                }
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">@Localizer["SiteSubtitle"]</div>
+            <div class="card-body">@Html.Raw(Model?.SiteAltBaslik)</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">@Localizer["Watermark"]</div>
+            <div class="card-body">
+                @if (Model?.Filigran != null)
+                {
+                    <a href="@Model.Filigran.Yol" target="_blank">
+                        <img src="@Model.Filigran.Yol" alt="@Localizer["Watermark"]" class="img-thumbnail">
+                    </a>
+                }
+                else
+                {
+                    <span class="alert alert-secondary">@Localizer["WatermarkNotFound"]</span>
+                }
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">@Localizer["SiteBackground"]</div>
+            <div class="card-body">
+                @if (Model?.SiteArkaplani != null)
+                {
+                    <a href="@Model.SiteArkaplani.Yol" target="_blank">
+                        <img src="@Model.SiteArkaplani.Yol" alt="@Localizer["SiteBackground"]" class="img-thumbnail">
+                    </a>
+                }
+                else
+                {
+                    <span class="alert alert-secondary">@Localizer["BackgroundNotFound"]</span>
+                }
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">@Localizer["Program"]</div>
+            <div class="card-body">
+                @if (Model?.Program != null)
+                {
+                    <a href="@Model?.Program" class="btn btn-primary" download>
+                        <i class="bi bi-download me-2"></i> @Localizer["DownloadProgram"]
+                    </a>
+                }
+                else
+                {
+                    <span class="alert alert-secondary">@Localizer["ProgramNotFound"]</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.Sayfalar != null && Model.Sayfalar.Any())
+    {
+        <div class="container mt-4 p-0">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="mb-0">@Localizer["PageTitles"]</h3>
+                <a class="btn btn-warning1" asp-action="EditSayfalar" asp-route-id="@Model?.Id">
+                    <i class="bi bi-pencil-square"></i> @Localizer["Update"]
+                </a>
+            </div>
+            <div class="row gy-3">
+                @foreach (var sayfa in Model.Sayfalar)
+                {
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h6 class="mb-0">
+                                    <button class="btn btn-link w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@sayfa.Id" aria-expanded="true" aria-controls="collapse-@sayfa.Id">
+                                        @sayfa.SayfaBasligi
+                                    </button>
+                                </h6>
+                            </div>
+
+                            <div id="collapse-@sayfa.Id" class="collapse show">
+                                <div class="card-body">
+                                    @if (sayfa.AltSayfalari != null && sayfa.AltSayfalari.Any())
+                                    {
+                                        @foreach (var alt in sayfa.AltSayfalari)
+                                        {
+                                            string value = alt.Url.Substring(alt.Url.IndexOf('/') + 1);
+                                            <p><a href="/@value" target="_blank">@alt.AltSayfaBaslik</a></p>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted">@Localizer["NoSubPage"]</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <p class="text-muted mt-4 text-center">@Localizer["NoPageTitle"]</p>
+    }
+</div>

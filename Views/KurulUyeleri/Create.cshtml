@@ -1,0 +1,239 @@
+﻿@model dafsem.Models.KurulUyeleri
+
+@{
+    ViewData["Title"] = "Yeni Kurul Üye Ekle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center px-4 py-3">
+            <h3 class="mb-0">Yeni Kurul Üyesi Ekle</h3>
+            <div class="d-flex align-items-center">
+                <!-- Excel Yükleme -->
+                <div class="me-3">
+                    <button class="btn btn-success d-flex align-items-center" id="ExcelUyeler">
+                        <i class="ri-file-excel-2-fill me-2"></i>
+                        <span>Excel Dosyasını Yükle</span>
+                    </button>
+                    <input type="file" accept=".xlsx, .xls" class="form-control d-none" id="excelFileInput" />
+                </div>
+                <!-- Geri Dön Butonu -->
+                <a asp-action="Index" class="btn btn-light btn-sm d-flex align-items-center">
+                    <i class="bi bi-arrow-left-circle me-2"></i>
+                    <span>Geri Dön</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="card-body">
+           
+
+            <!-- Yeni Üye Ekle Formu -->
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                 <!-- Unvan -->
+                <div class="my-3">
+                    <label asp-for="Unvan" class="form-label fw-bold"></label>
+                    <div class="input-group">
+                        <select name="Unvan" asp-items="ViewBag.Unvanlar" class="form-select">
+                            <option value="">Unvan Seçiniz...</option>
+                        </select>
+                        <a asp-action="Create" asp-controller="Unvan" class="btn btn-secondary">
+                            <i class="bi bi-plus-circle"></i> Ünvan Ekle
+                        </a>
+                    </div>
+                    <span asp-validation-for="Unvan" class="text-danger"></span>
+                </div>
+
+                <!-- Adı -->
+                <div class="mb-3">
+                    <label asp-for="Adi" class="form-label fw-bold"></label>
+                    <input asp-for="Adi" class="form-control" placeholder="Adınızı Girin" />
+                    <span asp-validation-for="Adi" class="text-danger"></span>
+                </div>
+
+                <!-- Soyadı -->
+                <div class="mb-3">
+                    <label asp-for="Soyadi" class="form-label fw-bold"></label>
+                    <input asp-for="Soyadi" class="form-control" placeholder="Soyadınızı Girin" />
+                    <span asp-validation-for="Soyadi" class="text-danger"></span>
+                </div>
+
+                <!-- Kurum -->
+                <div class="mb-3">
+                    <label asp-for="Kurum" class="form-label fw-bold"></label>
+                    <input asp-for="Kurum" class="form-control" placeholder="Kurum Adı" />
+                    <span asp-validation-for="Kurum" class="text-danger"></span>
+                </div>
+
+                <!-- Kategori -->
+                <div class="mb-3">
+                    <label asp-for="KategoriId" class="form-label fw-bold"></label>
+                    <div class="input-group">
+                        <select name="Kategori" asp-items="ViewBag.Kategoriler" class="form-select">
+                            <option value="">Kategori Seçiniz...</option>
+                        </select>
+                        <a asp-action="Create" asp-controller="KurulKategorileri" class="btn btn-secondary">
+                            <i class="bi bi-plus-circle"></i> Kategori Ekle
+                        </a>
+                    </div>
+                    <span asp-validation-for="KategoriId" class="text-danger"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Yeni Üye Ekle
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@{
+    var loadingModel = new AlerModal(
+          modelId: "loadingModal",
+           message: "Excel dosyası başarıyla yüklendi. Verilerin işlenmesi için lütfen bekleyin"
+        );
+}
+
+<partial name="Components/Model/_LoadingModal" model="loadingModel" />
+
+<!-- Modal Başlangıcı -->
+<div class="modal fade" id="excelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Excel Verisi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Veriler buraya yüklenecek -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section HeadLinks {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+}
+@{
+    var howShouldExcelModal = new ModalViewModel
+            {
+                ModalId = "howShouldExcelModal",
+                Title = "Bir Excel Dosyasından Veri Çekme",
+                Body = @"
+<p>Lütfen Excel dosyasının aşağıdaki formatta olduğundan emin olun:</p>
+<ul>
+    <li>İlk satırda başlık bilgileri yer almalıdır (ör: Ünvan, Adı, Soyadı, Kurum, Kategori).</li>
+    <li>Veriler belirtilen sırayla girilmelidir.</li>
+    <li>Veri satırları ikinci satırdan itibaren başlamalıdır.</li>
+</ul>
+<p>Örnek bir tablo:</p>
+<pre style='background-color:#f8f9fa;padding:10px;border:1px solid #ddd;border-radius:5px;'>
+| Ünvan     | Adı        | Soyadı     | Kurum                                    | Kategori          |
+|-----------|------------|------------|------------------------------------------|-------------------|
+| Prof. Dr. | Ersan      | ASLAN      | Kırıkkale Üniversitesi Rektörü​           | Onursal Başkanlar |
+| Prof. Dr. | Sedat      | AKTAN      | Kırıkkale Üniversitesi Rektör Yardımcısı | Onursal Başkanlar |
+| Doç. Dr.  | Fahrettin  | HORASAN    | Kırıkkale Üniversitesi                   | Düzenleme Kurulu  |
+</pre>
+<p>Bu format dışında bir dosya yüklerseniz, bazı veriler işlenemeyebilir.</p>
+<hr>
+<span>Hazır şambol olarak indirmek için <a href = '/AdminPanel/KurulUyeleri/DownloadExcelTemplate' >tıklayınız</a>
+",
+                ConfirmButtonId = "uploadExcelFile",
+                ButtonLabel = "Yükle",
+                ButtonIcon = " ri-file-excel-2-fill",
+                ButtonColor = "success",
+                TitleBackground = "success"
+            };
+}
+<partial name="Components/Model/_InfoModal" model="howShouldExcelModal" />
+
+<script>
+
+
+
+
+
+
+    document.querySelector('#ExcelUyeler').addEventListener('click', () => {
+        console.log("Tıklandı")
+        $('#howShouldExcelModal').attr('aria-hidden', 'false');
+        $('#howShouldExcelModal').modal('show');
+        console.log($('#howShouldExcelModal'))
+    });
+
+    document.querySelector('#uploadExcelFile').addEventListener('click', () => {
+        ModalHide("howShouldExcelModal");
+        const fileInput = document.getElementById('excelFileInput');
+        fileInput.value = ''; // Dosya girişini sıfırla
+        fileInput.click();
+    });
+
+    document.getElementById('excelFileInput').addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            // Yükleniyor modalını göster
+            $('#loadingModal').modal('show');
+
+            const formData = new FormData();
+            formData.append("excelFile", file);
+
+            const link = "@Url.Action("ReadExcelFile", "KurulUyeleri")"
+            console.log(link)
+                // fetch ile POST isteği gönder
+            fetch(link, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        "RequestVerificationToken": csrfToken
+                    }
+                })
+                .then(response => response.text()) // JSON veya metin dönebilir
+                .then(responseText => {
+                    // Yükleme modalını gizle
+                    $('#loadingModal').modal('hide');
+
+                    // Yanıtı işleyerek modali göster
+                    $('#modalBody').html(responseText);
+                    $('#excelModal').modal('show');
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+    });
+
+
+
+    function LoadingModalHide(modalId) {
+        console.log('Modal gizleniyor:', modalId);
+        const modalSelector = $('#' + modalId);
+
+        // Modal state sıfırlama
+        modalSelector.modal('hide'); // Bootstrap modal gizleme
+        modalSelector.removeClass('show'); // Görünürlük sınıfı kaldırılır
+        modalSelector.css('display', 'none'); // Görsel olarak gizlenir
+
+        // Modal backdrop temizleme
+        $('.modal-backdrop').remove();
+
+        // Body'deki modal açık durumunu kaldır
+        $('body').removeClass('modal-open');
+
+        // Focus'u temizleyin veya başka bir elemente taşıyın
+        document.activeElement.blur();
+
+        console.log('Modal tamamen gizlendi.');
+    }
+
+
+</script>

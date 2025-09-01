@@ -1,0 +1,45 @@
+﻿@model dafsem.Models.ViewModels.ModalViewModel
+@{
+    string titleColor = Model.TitleColor ?? "white";
+    string titleBackground = Model.TitleBackground ?? "primary";
+    string buttonIcon = Model.ButtonIcon ?? "";
+    string buttonLabel = Model.ButtonLabel ?? "";
+    string buttonColor = Model.ButtonColor ?? "primary";
+}
+<!-- Modal -->
+<div class="modal fade" id="@Model.ModalId" tabindex="-1" role="dialog" aria-labelledby=$" {@Model.ModalId}Label" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-@titleBackground text-@titleColor">
+                <h5 class="modal-title" id=$"{@Model.ModalId}Label">@Model.Title</h5>
+                <button type="button" onclick="ModalHide('@Model.ModalId')" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                @Html.Raw(Model.Body)
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="ModalHide('@Model.ModalId')" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> Kapat
+                </button>
+                @if (buttonLabel != "")
+                {
+                    <button type="button" class="btn btn-@buttonColor" id="@Model.ConfirmButtonId">
+                        <i class="@Model.ButtonIcon"></i> @Model.ButtonLabel
+                    </button>
+                }
+            
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ModalHide(modalId) {
+        // $('#' + modalId).removeClass('show');
+        // $('body').removeClass('modal-open');
+        // $('.modal-backdrop').remove();
+        // // $('#' + modalId).css("display", "none")
+        // $('#' + modalId).attr('aria-hidden', 'true');
+        $('#' + modalId).modal('hide')
+    }
+</script>

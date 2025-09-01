@@ -1,0 +1,39 @@
+﻿@model dafsem.Models.Dil
+
+<div class="container mt-5">
+    <div class="card shadow border-danger">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">Dil Silme</h3>
+        </div>
+        <div class="card-body">
+            <p class="card-text text-muted">Bu dili silmek istediğinizden emin misiniz?</p>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.DilAdi)</th>
+                            <td>@Html.DisplayFor(model => model.DilAdi)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.DilKodu)</th>
+                            <td>@Html.DisplayFor(model => model.DilKodu)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <form asp-action="Delete" class="d-inline">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Sil
+                    </button>
+                </form>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left-circle"></i> Geri Dön
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

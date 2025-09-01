@@ -1,0 +1,44 @@
+﻿@model dafsem.Models.BankaBilgileri
+
+<div class="container mt-5">
+    <div class="card shadow border-danger">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">Silme Onayı</h3>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Bu kaydı silmek istediğinizden emin misiniz?</h5>
+            <p class="card-text text-muted">Silmek istediğiniz banka bilgilerine ait bilgiler aşağıda listelenmiştir.</p>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.BankaAdi)</th>
+                            <td>@Html.DisplayFor(model => model.BankaAdi)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.HesapSahibiAdi)</th>
+                            <td>@Html.DisplayFor(model => model.HesapSahibiAdi)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.IBAN)</th>
+                            <td>@Html.DisplayFor(model => model.IBAN)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <form asp-action="Delete" class="d-inline">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Sil
+                    </button>
+                </form>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left-circle"></i> Listeye Dön
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

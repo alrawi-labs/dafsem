@@ -1,0 +1,86 @@
+﻿@model dafsem.Models.Konaklama
+
+<div class="container mt-5">
+    <div class="card shadow border-danger">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">Silme Onayı</h3>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Bu kaydı silmek istediğinizden emin misiniz?</h5>
+            <p class="card-text text-muted">Silmek istediğiniz konaklamaya ait bilgiler aşağıda listelenmiştir.</p>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.KonaklamaEvi)</th>
+                            <td>@Html.DisplayFor(model => model.KonaklamaEvi)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.Adres)</th>
+                            <td>@Html.DisplayFor(model => model.Adres)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.Tel)</th>
+                            <td>
+                                <a href="tel:@Html.DisplayFor(model => model.Tel)" class="text-decoration-none">
+                                    <i class="bi bi-telephone me-1"></i>@Html.DisplayFor(model => model.Tel)
+                                </a></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.Eposta)</th>
+                            <td>
+                                <a href="mailto:@Html.DisplayFor(model => model.Eposta)" class="text-decoration-none">
+                                    <i class="bi bi-envelope me-1"></i>@Html.DisplayFor(model => model.Eposta)
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.WebSitesi)</th>
+                            <td>
+                                <a href="//@Html.DisplayFor(model => model.WebSitesi)" target="_blank" class="text-decoration-none">
+                                    <i class="bi bi-globe me-1"></i> @Html.DisplayFor(model => model.WebSitesi)
+                                </a>
+                            </td>
+                            
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.YildizSayisi)</th>
+                            <td class="text-warning">
+                                @for (int i = 0; i < Model.YildizSayisi; i++)
+                                {
+                                    <i class="bi bi-star-fill"></i>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">@Html.DisplayNameFor(model => model.KahvaltiDahilMi)</th>
+                            <td>
+                                @if (Model.KahvaltiDahilMi == true)
+                                {
+                                    <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-x-circle-fill text-danger fs-5"></i>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <form asp-action="Delete" class="d-inline">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Sil
+                    </button>
+                </form>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left-circle"></i> Listeye Dön
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

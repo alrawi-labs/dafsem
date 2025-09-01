@@ -1,0 +1,27 @@
+﻿@model SayfaDetayViewModel
+
+<div class="container py-5">
+
+    <!-- Sayfa Başlığı ve URL -->
+    <div class="bg-light rounded-4 p-4 mb-5 position-relative">
+        <a asp-action="Index" asp-controller="EkSayfalar" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+            <i class="bi bi-arrow-left me-1"></i> Geri Dön
+        </a>
+        <span class="badge bg-primary bg-opacity-10 text-white position-absolute end-0 top-0 m-4 px-3 py-2 rounded-pill">
+            <i class="bi bi-link-45deg me-1"></i>@Model.Sayfa.Url
+        </span>
+        <h1 class="display-5 fw-bold text-center mt-3 mb-4">@Model.Sayfa.SayfaBasligi</h1>
+        <div class="d-flex justify-content-center">
+            <div class="bg-primary" style="height: 4px; width: 80px; border-radius: 2px;"></div>
+        </div>
+    </div>
+
+    <!-- İçerik Bölümü -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4 p-lg-5">
+            @await Html.PartialAsync("_BilesenlerPartial", Model)
+        </div>
+    </div>
+
+  
+</div>

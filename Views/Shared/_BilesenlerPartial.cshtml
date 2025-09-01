@@ -1,0 +1,21 @@
+﻿@model SayfaDetayViewModel
+
+@foreach (var bilesen in Model.Sayfa.SayfaBilesenleri)
+{
+    var bilesenDetay = Model.Bilesenler.FirstOrDefault(b => b.Id == bilesen.BilesenId);
+    if (bilesenDetay != null)
+    {
+        string htmlIcerik = bilesenDetay.Icerik;
+
+        for (int i = 0; i < bilesenDetay.Parametreler.Length; i++)
+        {
+            string param = bilesenDetay.Parametreler[i];
+            string deger = bilesen.SayfaBilesenDegerleri.FirstOrDefault(d => d.Baslik == param)?.Deger ?? "";
+
+            htmlIcerik = htmlIcerik.Replace($"id=\"Bilesen{param}\" name=\"Bilesen{param}\">",
+                                            $"id=\"Bilesen{param}\" name=\"Bilesen{param}\">{@Html.Raw(deger.Replace("\r\n", "<br>").Replace("\n", "<br>"))}");
+        }
+
+        @Html.Raw(htmlIcerik)
+    }
+}
