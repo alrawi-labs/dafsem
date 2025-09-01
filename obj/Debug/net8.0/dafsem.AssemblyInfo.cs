@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("dafsem")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c1d8a5c7d427a8443d66bb99cce9d23a166e532")]
 [assembly: System.Reflection.AssemblyProductAttribute("dafsem")]
 [assembly: System.Reflection.AssemblyTitleAttribute("dafsem")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

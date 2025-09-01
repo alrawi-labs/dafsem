@@ -905,10 +905,6 @@ C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\bin\Debug\net8.0\runtimes
 C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
 C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\dafsem.csproj.AssemblyReference.cache
-C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\dafsem.Resources.SharedResource.resources
-C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\dafsem.Resources.SharedResource.ar-SA.resources
-C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\dafsem.Resources.SharedResource.en-US.resources
-C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\dafsem.Resources.SharedResource.tr-TR.resources
 C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\dafsem.csproj.GenerateResource.cache
 C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\dafsem.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\dafsem.AssemblyInfoInputs.cache
@@ -940,3 +936,7 @@ C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\refint\d
 C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\dafsem.pdb
 C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\dafsem.genruntimeconfig.cache
 C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\ref\dafsem.dll
+C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\dafsem.Resources.dafsem.SharedResource.ar-SA.resources
+C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\dafsem.Resources.dafsem.SharedResource.en-US.resources
+C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\dafsem.Resources.dafsem.SharedResource.tr-TR.resources
+C:\Users\besir\source\repos\Final_Dafsem\dafsem\dafsem\obj\Debug\net8.0\dafsem.sourcelink.json
