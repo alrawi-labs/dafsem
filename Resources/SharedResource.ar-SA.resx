@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>1.3</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+
+	<data name="Settings" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+	<data name="PanelLanguage" xml:space="preserve">
+    <value>لغة اللوحة</value>
+  </data>
+	<data name="SelectLanguage" xml:space="preserve">
+    <value>اختر اللغة</value>
+  </data>
+	<data name="Turkish" xml:space="preserve">
+    <value>التركية</value>
+  </data>
+	<data name="English" xml:space="preserve">
+    <value>الإنجليزية</value>
+  </data>
+	<data name="Arabic" xml:space="preserve">
+    <value>العربية</value>
+  </data>
+	<data name="ChangeLanguage" xml:space="preserve">
+    <value>تغيير اللغة</value>
+  </data>
+	<data name="LanguageChangedSuccessfully" xml:space="preserve">
+    <value>تم تغيير اللغة بنجاح</value>
+  </data>
+	<data name="InvalidLanguageSelection" xml:space="preserve">
+    <value>اختيار لغة غير صالح!</value>
+  </data>
+	<data name="Update" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+	<data name="SiteName" xml:space="preserve">
+    <value>اسم الموقع</value>
+  </data>
+	<data name="InstitutionName" xml:space="preserve">
+    <value>اسم المؤسسة</value>
+  </data>
+	<data name="SiteLogo" xml:space="preserve">
+    <value>شعار الموقع</value>
+  </data>
+	<data name="RightLogo" xml:space="preserve">
+    <value>الشعار الأيمن</value>
+  </data>
+	<data name="LeftLogo" xml:space="preserve">
+    <value>الشعار الأيسر</value>
+  </data>
+	<data name="SiteSubtitle" xml:space="preserve">
+    <value>العنوان الفرعي للموقع</value>
+  </data>
+	<data name="Watermark" xml:space="preserve">
+    <value>علامة مائية</value>
+  </data>
+	<data name="SiteBackground" xml:space="preserve">
+    <value>خلفية الموقع</value>
+  </data>
+	<data name="Program" xml:space="preserve">
+    <value>البرنامج</value>
+  </data>
+	<data name="LogoNotFound" xml:space="preserve">
+    <value>الشعار غير موجود</value>
+  </data>
+	<data name="WatermarkNotFound" xml:space="preserve">
+    <value>العلامة المائية غير موجودة</value>
+  </data>
+	<data name="BackgroundNotFound" xml:space="preserve">
+    <value>الخلفية غير موجودة</value>
+  </data>
+	<data name="ProgramNotFound" xml:space="preserve">
+    <value>البرنامج غير موجود</value>
+  </data>
+	<data name="DownloadProgram" xml:space="preserve">
+    <value>تحميل البرنامج</value>
+  </data>
+	<data name="PageTitles" xml:space="preserve">
+    <value>عناوين الصفحات</value>
+  </data>
+	<data name="NoSubPage" xml:space="preserve">
+    <value>لا توجد صفحة فرعية</value>
+  </data>
+	<data name="NoPageTitle" xml:space="preserve">
+    <value>لا يوجد عنوان للصفحة</value>
+  </data>
+</root>
